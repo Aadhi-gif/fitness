@@ -32,7 +32,7 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
     const dinner = Math.round(baseCalories * 0.30);
     const snack = Math.round(baseCalories * 0.10);
 
-    const mealPlans = [
+    const weeklyMealPlans = [
       // Monday
       {
         breakfast: {
@@ -108,8 +108,8 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
 
     // For demo purposes, we'll repeat the first two days
     return [
-      ...mealPlans,
-      mealPlans[0], mealPlans[1], mealPlans[0], mealPlans[1], mealPlans[0]
+      ...weeklyMealPlans,
+      weeklyMealPlans[0], weeklyMealPlans[1], weeklyMealPlans[0], weeklyMealPlans[1], weeklyMealPlans[0]
     ];
   }, [targetCalories, goal]);
 
