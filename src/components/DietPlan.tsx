@@ -112,6 +112,7 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
       mealPlans[0], mealPlans[1], mealPlans[0], mealPlans[1], mealPlans[0]
     ];
   }, [targetCalories, goal]);
+
   const currentPlan = mealPlans[selectedDay];
 
   const getMealIcon = (mealType: string) => {
