@@ -67,9 +67,11 @@ const FloatingAuthButton: React.FC = () => {
         {/* Main FAB Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
+          aria-label={isExpanded ? "Close authentication menu" : "Open authentication menu"}
+          aria-expanded={isExpanded}
           className={`w-14 h-14 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 ${
-            isExpanded 
-              ? 'bg-red-500 hover:bg-red-600 rotate-45' 
+            isExpanded
+              ? 'bg-red-500 hover:bg-red-600 rotate-45'
               : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
           }`}
         >

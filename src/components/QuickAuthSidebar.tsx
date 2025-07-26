@@ -84,6 +84,8 @@ const QuickAuthSidebar: React.FC = () => {
         {/* Toggle Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
+          aria-label={isExpanded ? "Close quick access sidebar" : "Open quick access sidebar"}
+          aria-expanded={isExpanded}
           className="absolute top-1/2 -right-6 transform -translate-y-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white w-12 h-16 rounded-r-xl shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center"
         >
           {isExpanded ? (

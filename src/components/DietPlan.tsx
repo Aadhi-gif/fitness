@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Utensils, Coffee, Sun, Moon, Apple } from 'lucide-react';
 
 interface Meal {
@@ -20,7 +20,7 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
   
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const getMealPlans = () => {
+  const mealPlans = useMemo(() => {
     const baseCalories = Math.round(targetCalories);
     // Adjust macros based on goal
     const proteinRatio = goal === 'gain' ? 0.30 : goal === 'lose' ? 0.35 : 0.25;
@@ -111,9 +111,7 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
       ...mealPlans,
       mealPlans[0], mealPlans[1], mealPlans[0], mealPlans[1], mealPlans[0]
     ];
-  };
-
-  const mealPlans = getMealPlans();
+  }, [targetCalories, goal]);
   const currentPlan = mealPlans[selectedDay];
 
   const getMealIcon = (mealType: string) => {
