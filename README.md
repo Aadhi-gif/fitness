@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-9njvwc202-aadhithyas-projects-adc44de8.vercel.app](https://fitness-9njvwc202-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-j4pt3n109-aadhithyas-projects-adc44de8.vercel.app](https://fitness-j4pt3n109-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration, and administrator monitoring
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration, administrator monitoring, and backend status monitoring
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -66,6 +66,18 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🔍 Search & Filter:** Advanced filtering and search capabilities for monitoring data
 - **⚠️ Security Monitoring:** Failed login attempt tracking and suspicious activity detection
 - **🎨 Admin Interface:** Dedicated red-themed admin interface with role-based access control
+
+### 🔍 Backend Status Monitoring (NEW!)
+- **📊 Real-time Health Monitoring:** Live backend connectivity checking with automatic 30-second intervals
+- **🌐 Multiple Endpoint Testing:** Tests health, status, ping, authentication, and base API endpoints
+- **⏱️ Response Time Tracking:** Monitors API response times and performance metrics
+- **🔄 Automatic Retry Logic:** Smart retry mechanisms with timeout handling (5-second timeout)
+- **📈 Network Diagnostics:** Connection type detection, online/offline status, effective network type
+- **🎯 Visual Status Indicators:** Color-coded online (green) / offline (red) status throughout the app
+- **📋 Detailed Status Page:** Comprehensive backend monitoring dashboard in admin panel
+- **💾 Export Capabilities:** Download backend status reports and endpoint test results
+- **🔧 Manual Testing:** On-demand backend health checks with refresh buttons
+- **⚠️ Error Tracking:** Detailed error messages and failure reason logging
 
 ### 🔗 Backend Integration
 - **🌐 Offline-First Architecture** - Works perfectly without backend, syncs when available
