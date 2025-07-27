@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Shield, Users, Activity, Eye, Calendar, Clock, MapPin, 
+import {
+  Shield, Users, Activity, Eye, Calendar, Clock, MapPin,
   TrendingUp, AlertCircle, Download, Filter, Search,
-  UserCheck, UserX, Globe, Smartphone, Monitor
+  UserCheck, UserX, Globe, Smartphone, Monitor, Server
 } from 'lucide-react';
+import BackendStatusPage from './BackendStatusPage';
 
 interface UserActivity {
   id: string;
@@ -45,7 +46,7 @@ interface UserStats {
 }
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'activities' | 'logins'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'activities' | 'logins' | 'backend'>('overview');
   const [activities, setActivities] = useState<UserActivity[]>([]);
   const [loginRecords, setLoginRecords] = useState<LoginRecord[]>([]);
   const [userStats, setUserStats] = useState<UserStats>({
@@ -273,7 +274,8 @@ const AdminDashboard: React.FC = () => {
               { id: 'overview', label: 'Overview', icon: TrendingUp },
               { id: 'users', label: 'Users', icon: Users },
               { id: 'activities', label: 'Activities', icon: Activity },
-              { id: 'logins', label: 'Login Records', icon: Eye }
+              { id: 'logins', label: 'Login Records', icon: Eye },
+              { id: 'backend', label: 'Backend Status', icon: Server }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -476,6 +478,11 @@ const AdminDashboard: React.FC = () => {
               </table>
             </div>
           </div>
+        )}
+
+        {/* Backend Status Tab */}
+        {activeTab === 'backend' && (
+          <BackendStatusPage />
         )}
       </div>
     </div>
