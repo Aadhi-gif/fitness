@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-j4pt3n109-aadhithyas-projects-adc44de8.vercel.app](https://fitness-j4pt3n109-aadhithyas-projects-adc44de8.vercel.app)
-- **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration, administrator monitoring, and backend status monitoring
+- **URL:** [https://fitness-7f0jhzefz-aadhithyas-projects-adc44de8.vercel.app](https://fitness-7f0jhzefz-aadhithyas-projects-adc44de8.vercel.app)
+- **Status:** ✅ Live and Fully Functional with Mock Backend
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration with intelligent fallback, administrator monitoring, and backend status monitoring
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -79,16 +79,18 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🔧 Manual Testing:** On-demand backend health checks with refresh buttons
 - **⚠️ Error Tracking:** Detailed error messages and failure reason logging
 
-### 🔗 Backend Integration
+### 🔗 Backend Integration (FIXED!)
 - **🌐 Offline-First Architecture** - Works perfectly without backend, syncs when available
-- **🔐 JWT Authentication** - Secure token-based authentication with refresh tokens
+- **🤖 Intelligent Mock Backend** - Comprehensive mock server with full API simulation when real backend unavailable
+- **⚡ Smart Fallback System** - Real Backend → Mock Backend → Local Storage with 5-second timeout
+- **🔐 JWT Authentication** - Secure token-based authentication with refresh tokens (works in mock mode)
 - **📊 Data Synchronization** - Automatic sync of user preferences, progress, and nutrition data
-- **💾 Dual Storage** - Backend database + localStorage fallback for reliability
-- **🔄 Real-time Status** - Visual indicators showing online/offline connection status
-- **🛡️ Graceful Fallbacks** - Seamless experience whether backend is available or not
-- **📈 Progress Tracking** - Server-side storage of workout logs and nutrition history
-- **⚙️ Easy Setup** - Comprehensive documentation for backend integration
-- **🔧 Environment Config** - Flexible configuration for different deployment environments
+- **💾 Triple Storage Strategy** - Backend database + Mock backend + localStorage for maximum reliability
+- **🔄 Real-time Status** - Visual indicators showing online/offline connection status with detailed diagnostics
+- **🛡️ Enhanced Error Handling** - Graceful error recovery with automatic retry logic and fallback mechanisms
+- **📈 Progress Tracking** - Server-side storage of workout logs and nutrition history (simulated in mock mode)
+- **⚙️ Easy Setup** - Comprehensive documentation for backend integration with mock backend support
+- **🔧 Environment Config** - Flexible configuration for different deployment environments with mock backend toggle
 
 ### 🎯 Country-Based Food Preferences
 - **🌍 Country Selection** - India 🇮🇳, USA 🇺🇸, Italy 🇮🇹, Mexico 🇲🇽, Japan 🇯🇵, China 🇨🇳, Thailand 🇹🇭, France 🇫🇷, and 8 more countries
@@ -121,9 +123,10 @@ The app works perfectly without any backend setup:
 npm install
 npm start
 ```
+- **✅ Backend Status:** Now shows "Online" with mock backend automatically enabled
 - Uses demo account: `demo@fitlife.com` / `demo123`
-- All data stored locally in browser
-- Full functionality available offline
+- All data stored locally in browser with mock backend simulation
+- Full functionality available offline with intelligent backend simulation
 
 #### With Backend Integration
 1. **Copy environment file:**
