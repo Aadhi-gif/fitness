@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-bhh8huyy5-aadhithyas-projects-adc44de8.vercel.app](https://fitness-bhh8huyy5-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-8vw7h62my-aadhithyas-projects-adc44de8.vercel.app](https://fitness-8vw7h62my-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, and country-based personalized food preferences
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, and backend integration
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -52,8 +52,20 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🤖 Comprehensive AI Assistant** - ChatGPT-level knowledge covering fitness, nutrition, health, travel, equipment, and more
 - **🎤 Advanced Voice Features** - Speech recognition and text-to-speech for hands-free interaction
 - **🎯 Country-Based Food Preferences** - Comprehensive popup with country selection, regional cuisines, and local taste preferences
+- **🔗 Backend Integration** - Seamless server synchronization with offline-first approach
 
-### 🎯 Country-Based Food Preferences (NEW!)
+### 🔗 Backend Integration (NEW!)
+- **🌐 Offline-First Architecture** - Works perfectly without backend, syncs when available
+- **🔐 JWT Authentication** - Secure token-based authentication with refresh tokens
+- **📊 Data Synchronization** - Automatic sync of user preferences, progress, and nutrition data
+- **💾 Dual Storage** - Backend database + localStorage fallback for reliability
+- **🔄 Real-time Status** - Visual indicators showing online/offline connection status
+- **🛡️ Graceful Fallbacks** - Seamless experience whether backend is available or not
+- **📈 Progress Tracking** - Server-side storage of workout logs and nutrition history
+- **⚙️ Easy Setup** - Comprehensive documentation for backend integration
+- **🔧 Environment Config** - Flexible configuration for different deployment environments
+
+### 🎯 Country-Based Food Preferences
 - **🌍 Country Selection** - India 🇮🇳, USA 🇺🇸, Italy 🇮🇹, Mexico 🇲🇽, Japan 🇯🇵, China 🇨🇳, Thailand 🇹🇭, France 🇫🇷, and 8 more countries
 - **🏛️ Regional Styles** - North Indian, South Indian, Bengali, Southern USA, Tex-Mex, Northern Italian, Sicilian, Kansai, Sichuan, etc.
 - **👅 Local Taste Preferences** - Spicy & Hot, Sweet & Savory, Fresh & Light, Rich & Creamy, Bold & Aromatic, Traditional Authentic
@@ -75,6 +87,42 @@ When you select **India** as your country, you get authentic Indian meals:
 - **Snacks:** Samosa with Chutney, Bhel Puri, Masala Chai with Biscuits, Fruit Chaat
 - **Regional Options:** North Indian, South Indian, Bengali, Gujarati, Punjabi, Maharashtrian, Rajasthani, Kerala
 - **Local Tastes:** Spicy & Hot, Sweet & Savory, Tangy & Sour, Rich & Creamy, Aromatic Spices, Street Food Style
+
+### 🔧 Backend Integration Setup
+
+#### Quick Start (No Backend Required)
+The app works perfectly without any backend setup:
+```bash
+npm install
+npm start
+```
+- Uses demo account: `demo@fitlife.com` / `demo123`
+- All data stored locally in browser
+- Full functionality available offline
+
+#### With Backend Integration
+1. **Copy environment file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure your backend URL:**
+   ```env
+   REACT_APP_API_URL=https://your-backend-api.com/api
+   ```
+
+3. **Backend Requirements:**
+   - Authentication endpoints (`/auth/login`, `/auth/register`, etc.)
+   - User preferences storage (`/preferences/food`)
+   - Progress tracking (`/progress/workout`, `/progress/nutrition`)
+   - See `BACKEND_INTEGRATION.md` for complete API specification
+
+#### Supported Backend Options
+- **Node.js + Express + PostgreSQL**
+- **Python + FastAPI + PostgreSQL**
+- **Firebase (Serverless)**
+- **Supabase (Backend-as-a-Service)**
+- **Custom REST API**
 
 ### 🎨 Design Features
 - **Responsive Design** - Mobile-first approach with Tailwind CSS
