@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { Utensils, Coffee, Sun, Moon, Apple } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Utensils, Coffee, Sun, Moon, Apple, Settings, DollarSign, Clock } from 'lucide-react';
+import FoodPreferencesModal from './FoodPreferencesModal';
 
 interface Meal {
   name: string;
@@ -8,6 +9,22 @@ interface Meal {
   carbs: number;
   fat: number;
   description: string;
+  cost?: string;
+  cookingTime?: string;
+  difficulty?: string;
+}
+
+interface FoodPreferences {
+  dietaryRestrictions: string[];
+  cuisinePreferences: string[];
+  budgetRange: string;
+  cookingTime: string;
+  spiceLevel: string;
+  mealComplexity: string;
+  allergies: string[];
+  dislikedFoods: string[];
+  preferredProteins: string[];
+  location: string;
 }
 
 interface DietPlanProps {
@@ -17,7 +34,95 @@ interface DietPlanProps {
 
 const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
   const [selectedDay, setSelectedDay] = useState(0);
-  
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const [foodPreferences, setFoodPreferences] = useState<FoodPreferences>({
+    dietaryRestrictions: [],
+    cuisinePreferences: [],
+    budgetRange: 'moderate',
+    cookingTime: '30-45',
+    spiceLevel: 'medium',
+    mealComplexity: 'moderate',
+    allergies: [],
+    dislikedFoods: [],
+    preferredProteins: [],
+    location: 'global'
+  });
+  const [hasSetPreferences, setHasSetPreferences] = useState(false);
+
+  // Show preferences modal on first visit
+  useEffect(() => {
+    const savedPreferences = localStorage.getItem('foodPreferences');
+    if (savedPreferences) {
+      setFoodPreferences(JSON.parse(savedPreferences));
+      setHasSetPreferences(true);
+    } else {
+      // Show modal after a short delay for better UX
+      const timer = setTimeout(() => {
+        setShowPreferencesModal(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleSavePreferences = (preferences: FoodPreferences) => {
+    setFoodPreferences(preferences);
+    setHasSetPreferences(true);
+    localStorage.setItem('foodPreferences', JSON.stringify(preferences));
+  };
+
+  const getBudgetIcon = (budgetRange: string) => {
+    switch (budgetRange) {
+      case 'budget': return '💰';
+      case 'moderate': return '💵';
+      case 'premium': return '💎';
+      case 'luxury': return '👑';
+      default: return '💵';
+    }
+  };
+
+  const getCostEstimate = (budgetRange: string) => {
+    switch (budgetRange) {
+      case 'budget': return '$5-10';
+      case 'moderate': return '$10-20';
+      case 'premium': return '$20-35';
+      case 'luxury': return '$35+';
+      default: return '$10-20';
+    }
+  };
+
+  const customizeMealForPreferences = (meal: Meal, preferences: FoodPreferences): Meal => {
+    let customizedMeal = { ...meal };
+
+    // Add cost and cooking time based on preferences
+    customizedMeal.cost = getCostEstimate(preferences.budgetRange);
+    customizedMeal.cookingTime = preferences.cookingTime.includes('-')
+      ? preferences.cookingTime
+      : preferences.cookingTime + ' min';
+
+    // Adjust meal based on dietary restrictions
+    if (preferences.dietaryRestrictions.includes('Vegetarian') &&
+        (meal.description.toLowerCase().includes('chicken') ||
+         meal.description.toLowerCase().includes('beef') ||
+         meal.description.toLowerCase().includes('fish'))) {
+      customizedMeal.name = meal.name.replace(/Chicken|Beef|Fish|Salmon|Cod|Turkey|Lamb/gi, 'Tofu');
+      customizedMeal.description = meal.description.replace(/chicken|beef|fish|salmon|cod|turkey|lamb/gi, 'tofu');
+    }
+
+    if (preferences.dietaryRestrictions.includes('Vegan')) {
+      customizedMeal.description = customizedMeal.description
+        .replace(/cheese|yogurt|milk|eggs/gi, 'plant-based alternatives');
+    }
+
+    // Adjust spice level in description
+    if (preferences.spiceLevel === 'mild') {
+      customizedMeal.description += ' (mild spices)';
+    } else if (preferences.spiceLevel === 'hot') {
+      customizedMeal.description += ' (extra spicy)';
+    }
+
+    return customizedMeal;
+  };
+
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const mealPlans = useMemo(() => {
@@ -283,7 +388,17 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
     return weeklyMealPlans;
   }, [targetCalories, goal]);
 
-  const currentPlan = mealPlans[selectedDay];
+  const currentPlan = useMemo(() => {
+    const plan = mealPlans[selectedDay];
+    if (!plan) return null;
+
+    return {
+      breakfast: customizeMealForPreferences(plan.breakfast, foodPreferences),
+      lunch: customizeMealForPreferences(plan.lunch, foodPreferences),
+      dinner: customizeMealForPreferences(plan.dinner, foodPreferences),
+      snack: customizeMealForPreferences(plan.snack, foodPreferences)
+    };
+  }, [mealPlans, selectedDay, foodPreferences]);
 
   const getMealIcon = (mealType: string) => {
     switch (mealType) {
@@ -302,19 +417,35 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
 
   const renderMeal = (meal: Meal, mealType: string, bgColor: string, textColor: string) => (
     <div className={`${bgColor} rounded-xl p-6`}>
-      <div className={`flex items-center gap-3 mb-4`}>
-        <div className={`p-2 bg-white rounded-lg ${textColor}`}>
-          {getMealIcon(mealType)}
+      <div className={`flex items-center justify-between mb-4`}>
+        <div className={`flex items-center gap-3`}>
+          <div className={`p-2 bg-white rounded-lg ${textColor}`}>
+            {getMealIcon(mealType)}
+          </div>
+          <div>
+            <h4 className={`font-semibold ${textColor} capitalize`}>{mealType}</h4>
+            <p className={`text-sm ${textColor} opacity-80`}>{meal.calories} calories</p>
+          </div>
         </div>
-        <div>
-          <h4 className={`font-semibold ${textColor} capitalize`}>{mealType}</h4>
-          <p className={`text-sm ${textColor} opacity-80`}>{meal.calories} calories</p>
+        <div className="flex items-center gap-2">
+          {meal.cost && (
+            <div className={`flex items-center gap-1 px-2 py-1 bg-white rounded-lg ${textColor}`}>
+              <DollarSign className="w-3 h-3" />
+              <span className="text-xs font-medium">{meal.cost}</span>
+            </div>
+          )}
+          {meal.cookingTime && (
+            <div className={`flex items-center gap-1 px-2 py-1 bg-white rounded-lg ${textColor}`}>
+              <Clock className="w-3 h-3" />
+              <span className="text-xs font-medium">{meal.cookingTime}</span>
+            </div>
+          )}
         </div>
       </div>
-      
+
       <h5 className={`font-bold ${textColor} mb-2`}>{meal.name}</h5>
       <p className={`text-sm ${textColor} opacity-90 mb-4`}>{meal.description}</p>
-      
+
       <div className="grid grid-cols-3 gap-3">
         <div className="text-center">
           <div className={`text-lg font-bold ${textColor}`}>{meal.protein}g</div>
@@ -332,14 +463,52 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
     </div>
   );
 
+  if (!currentPlan) return null;
+
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-3 bg-orange-100 rounded-xl">
-          <Utensils className="w-6 h-6 text-orange-600" />
+    <>
+      <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-orange-100 rounded-xl">
+              <Utensils className="w-6 h-6 text-orange-600" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">Your Personalized Diet Plan</h2>
+              <p className="text-gray-600">
+                {hasSetPreferences ? (
+                  <>Budget: {getBudgetIcon(foodPreferences.budgetRange)} {getCostEstimate(foodPreferences.budgetRange)}/meal</>
+                ) : (
+                  'Customize your meal preferences for better recommendations'
+                )}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowPreferencesModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="hidden sm:inline">Food Preferences</span>
+          </button>
         </div>
-        <h2 className="text-2xl font-bold text-gray-800">Your Diet Plan</h2>
-      </div>
+
+        {!hasSetPreferences && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-orange-100 rounded-lg">
+                <Settings className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-orange-800">Customize Your Experience</h3>
+                <p className="text-orange-700 text-sm">
+                  Set your food preferences, budget, and dietary restrictions to get personalized meal recommendations!
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
       <div className="flex flex-wrap gap-2 mb-8">
         {days.map((day, index) => (
@@ -391,7 +560,15 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      <FoodPreferencesModal
+        isOpen={showPreferencesModal}
+        onClose={() => setShowPreferencesModal(false)}
+        onSave={handleSavePreferences}
+        currentPreferences={foodPreferences}
+      />
+    </>
   );
 };
 
