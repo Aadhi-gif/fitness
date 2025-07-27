@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-a4s58l2ya-aadhithyas-projects-adc44de8.vercel.app](https://fitness-a4s58l2ya-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-qnq9bhts8-aadhithyas-projects-adc44de8.vercel.app](https://fitness-qnq9bhts8-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, and exercise videos
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, and personalized food preferences
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -51,6 +51,17 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🎥 Exercise Video Tutorials** - YouTube demonstrations for every exercise with form tips
 - **🤖 Comprehensive AI Assistant** - ChatGPT-level knowledge covering fitness, nutrition, health, travel, equipment, and more
 - **🎤 Advanced Voice Features** - Speech recognition and text-to-speech for hands-free interaction
+- **🎯 Personalized Food Preferences** - Comprehensive popup for dietary restrictions, budget, taste preferences, and allergies
+
+### 🎯 Food Preferences Customization (NEW!)
+- **💰 Budget Ranges** - Budget-Friendly ($5-10), Moderate ($10-20), Premium ($20-35), Luxury ($35+)
+- **🥗 Dietary Restrictions** - Vegetarian, Vegan, Pescatarian, Keto, Paleo, Mediterranean, Low-Carb, Gluten-Free, etc.
+- **🌍 Cuisine Preferences** - Mediterranean, Asian, Mexican, Italian, Indian, American, Middle Eastern, French, Thai, Japanese
+- **⏰ Cooking Time** - Quick (15-30 min), Moderate (30-45 min), Extended (45-60 min), Elaborate (60+ min)
+- **🌶️ Spice Levels** - Mild, Medium, Hot, Very Hot with visual indicators
+- **⚠️ Allergies & Restrictions** - Nuts, Shellfish, Fish, Eggs, Dairy, Soy, Gluten, Sesame
+- **🥩 Protein Preferences** - Chicken, Fish, Beef, Pork, Turkey, Tofu, Legumes, Eggs
+- **💾 Persistent Storage** - Preferences saved locally and applied to all meal recommendations
 
 ### 🎨 Design Features
 - **Responsive Design** - Mobile-first approach with Tailwind CSS
