@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-7b584t6pd-aadhithyas-projects-adc44de8.vercel.app](https://fitness-7b584t6pd-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-a4s58l2ya-aadhithyas-projects-adc44de8.vercel.app](https://fitness-a4s58l2ya-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, and exercise videos
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -45,6 +45,12 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **Exercise Routines** - Targeted workouts for different muscle groups
 - **AI Fitness Assistant** - Interactive chat with voice support for form corrections and tips
 - **Progress Tracking** - Visual progress indicators and analytics
+
+### 🌟 NEW Enhanced Features
+- **🍽️ Unique Daily Diet Plans** - 7 international cuisine themes (Mediterranean, Asian, Mexican, Italian, Indian, American, Middle Eastern)
+- **🎥 Exercise Video Tutorials** - YouTube demonstrations for every exercise with form tips
+- **🤖 Comprehensive AI Assistant** - ChatGPT-level knowledge covering fitness, nutrition, health, travel, equipment, and more
+- **🎤 Advanced Voice Features** - Speech recognition and text-to-speech for hands-free interaction
 
 ### 🎨 Design Features
 - **Responsive Design** - Mobile-first approach with Tailwind CSS
@@ -95,6 +101,8 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **Health:** "I'm sore after my workout", "How do hormones affect fitness?", "What supplements should I take?"
 - **Specialized:** "Training during menstrual cycle", "Exercise for seniors", "Sports performance tips"
 - **Psychology:** "I need motivation to continue", "How to build habits", "Dealing with stress"
+- **Lifestyle:** "How to exercise while traveling?", "What equipment should I buy?", "Quick workouts for busy schedules"
+- **General:** "Hello", "Good morning", "How's the weather affecting my workout?", "Tell me about fitness apps"
 
 ## 🛠️ Available Scripts
 
