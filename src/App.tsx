@@ -12,6 +12,7 @@ import WelcomeBanner from './components/WelcomeBanner';
 import FloatingAuthButton from './components/FloatingAuthButton';
 import QuickAuthSidebar from './components/QuickAuthSidebar';
 import StickyAuthBar from './components/StickyAuthBar';
+import AdminDashboard from './components/AdminDashboard';
 
 interface UserProfile {
   name: string;
@@ -24,8 +25,11 @@ interface UserProfile {
 }
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  // Check if user is admin
+  const isAdmin = user?.role === 'admin';
 
   const calculateTargetCalories = (profile: UserProfile): number => {
     // BMR calculation using Mifflin-St Jeor Equation
@@ -71,26 +75,29 @@ function App() {
       <QuickAuthSidebar />
 
       <ProtectedRoute>
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {!userProfile ? (
-            <div className="text-center mb-8">
-              <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                Welcome to Your Fitness Journey
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                Get personalized diet plans, exercise routines, and expert guidance based on your unique goals and body metrics.
-              </p>
-            </div>
-          ) : (
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                Welcome back, {userProfile.name}! 
-              </h2>
-              <p className="text-lg text-gray-600">
-                Your personalized fitness plan is ready. Let's achieve your goals together!
-              </p>
-            </div>
-          )}
+        {isAdmin ? (
+          <AdminDashboard />
+        ) : (
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {!userProfile ? (
+              <div className="text-center mb-8">
+                <h2 className="text-4xl font-bold text-gray-800 mb-4">
+                  Welcome to Your Fitness Journey
+                </h2>
+                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                  Get personalized diet plans, exercise routines, and expert guidance based on your unique goals and body metrics.
+                </p>
+              </div>
+            ) : (
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                  Welcome back, {userProfile.name}!
+                </h2>
+                <p className="text-lg text-gray-600">
+                  Your personalized fitness plan is ready. Let's achieve your goals together!
+                </p>
+              </div>
+            )}
 
           <UserProfileForm 
             onProfileSubmit={setUserProfile} 
@@ -114,7 +121,8 @@ function App() {
               />
             </>
           )}
-        </main>
+          </main>
+        )}
       </ProtectedRoute>
 
       {/* Footer */}

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthState, LoginCredentials, RegisterCredentials } from '../types/auth';
 import { authAPI, tokenManager, handleAPIError } from '../services/api';
+import { activityLogger } from '../services/activityLogger';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<boolean>;
@@ -49,7 +50,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       goal: 'maintain' as const,
       activityLevel: 'moderate' as const,
       createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-01T00:00:00Z'
+      updatedAt: '2024-01-01T00:00:00Z',
+      role: 'user' as const
+    },
+    {
+      id: 'admin_1',
+      email: 'administrator@fitlife.com',
+      password: 'admin123!@#',
+      name: 'Administrator',
+      age: 30,
+      weight: 75,
+      height: 180,
+      goal: 'maintain' as const,
+      activityLevel: 'moderate' as const,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+      role: 'admin' as const
     }
   ];
 
@@ -122,6 +138,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             isLoading: false,
           });
 
+          // Log successful login
+          activityLogger.logLogin(
+            response.user.id,
+            response.user.name,
+            response.user.email,
+            true
+          );
+
           setIsBackendConnected(true);
           localStorage.removeItem('backend_unavailable');
           return true;
@@ -140,6 +164,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
 
       if (!user) {
+        // Log failed login attempt
+        activityLogger.logLogin(
+          'unknown',
+          'Unknown',
+          credentials.email,
+          false,
+          'Invalid email or password'
+        );
         setError('Invalid email or password');
         setAuthState(prev => ({ ...prev, isLoading: false }));
         return false;
@@ -154,6 +186,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         height: user.height,
         goal: user.goal,
         activityLevel: user.activityLevel,
+        role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };
@@ -164,6 +197,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         isAuthenticated: true,
         isLoading: false,
       });
+
+      // Log successful login
+      activityLogger.logLogin(
+        authenticatedUser.id,
+        authenticatedUser.name,
+        authenticatedUser.email,
+        true
+      );
 
       return true;
     } catch (error) {
@@ -229,6 +270,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = async () => {
+    const currentUser = authState.user;
+
     try {
       if (isBackendConnected && tokenManager.getToken()) {
         await authAPI.logout();
@@ -236,6 +279,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.warn('Backend logout failed:', error);
     } finally {
+      // Log logout before clearing user data
+      if (currentUser) {
+        activityLogger.logLogout(
+          currentUser.id,
+          currentUser.name,
+          currentUser.email
+        );
+      }
+
       tokenManager.clearTokens();
       localStorage.removeItem('fitlife_user');
       setAuthState({
@@ -257,6 +309,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           ...prev,
           user: updatedUser
         }));
+
+        // Log profile update
+        activityLogger.logProfileUpdate(
+          updatedUser.id,
+          updatedUser.name,
+          updatedUser.email,
+          userData
+        );
+
         return true;
       } else {
         // Fallback to local storage update
@@ -268,6 +329,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             ...prev,
             user: updatedUser
           }));
+
+          // Log profile update
+          activityLogger.logProfileUpdate(
+            updatedUser.id,
+            updatedUser.name,
+            updatedUser.email,
+            userData
+          );
+
           return true;
         }
         return false;

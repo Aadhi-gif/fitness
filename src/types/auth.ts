@@ -7,6 +7,7 @@ export interface User {
   height?: number;
   goal?: 'lose' | 'maintain' | 'gain';
   activityLevel?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+  role?: 'user' | 'admin';
   createdAt: string;
   updatedAt: string;
 }

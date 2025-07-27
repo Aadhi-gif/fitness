@@ -48,12 +48,21 @@ const Header: React.FC = () => {
                 <div className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all"
+                    className={`flex items-center gap-3 text-white px-4 py-2 rounded-xl transition-all ${
+                      user?.role === 'admin'
+                        ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800'
+                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+                    }`}
                   >
                     <div className="p-1 bg-white/20 rounded-full">
                       <User className="w-4 h-4" />
                     </div>
-                    <span className="font-medium">{user?.name}</span>
+                    <div className="flex flex-col items-start">
+                      <span className="font-medium">{user?.name}</span>
+                      {user?.role === 'admin' && (
+                        <span className="text-xs opacity-80">Administrator</span>
+                      )}
+                    </div>
                   </button>
 
                   {showUserMenu && (

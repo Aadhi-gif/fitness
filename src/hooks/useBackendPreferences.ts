@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { preferencesAPI, handleAPIError } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { activityLogger } from '../services/activityLogger';
 
 interface FoodPreferences {
   dietaryRestrictions: string[];
@@ -20,7 +21,7 @@ interface FoodPreferences {
 }
 
 export const useBackendPreferences = () => {
-  const { isAuthenticated, isBackendConnected } = useAuth();
+  const { isAuthenticated, isBackendConnected, user } = useAuth();
   const [preferences, setPreferences] = useState<FoodPreferences>({
     dietaryRestrictions: [],
     cuisinePreferences: [],
@@ -110,7 +111,17 @@ export const useBackendPreferences = () => {
       // Always save to localStorage as backup
       localStorage.setItem('foodPreferences', JSON.stringify(newPreferences));
       setPreferences(newPreferences);
-      
+
+      // Log food preferences update
+      if (user) {
+        activityLogger.logFoodPreferencesUpdate(
+          user.id,
+          user.name,
+          user.email,
+          newPreferences
+        );
+      }
+
       return true;
     } catch (error) {
       console.warn('Failed to save preferences to backend, saved locally only');
