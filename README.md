@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-7f0jhzefz-aadhithyas-projects-adc44de8.vercel.app](https://fitness-7f0jhzefz-aadhithyas-projects-adc44de8.vercel.app)
-- **Status:** ✅ Live and Fully Functional with Mock Backend
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration with intelligent fallback, administrator monitoring, and backend status monitoring
+- **URL:** [https://fitness-okhx5rcbu-aadhithyas-projects-adc44de8.vercel.app](https://fitness-okhx5rcbu-aadhithyas-projects-adc44de8.vercel.app)
+- **Status:** ✅ Live and Fully Functional with Demo Account Restrictions
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration with intelligent fallback, administrator monitoring, backend status monitoring, and first-time demo account policy
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -78,6 +78,18 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **💾 Export Capabilities:** Download backend status reports and endpoint test results
 - **🔧 Manual Testing:** On-demand backend health checks with refresh buttons
 - **⚠️ Error Tracking:** Detailed error messages and failure reason logging
+
+### 🎯 Demo Account Management (NEW!)
+- **🔒 First-Time Use Policy:** Demo account available for first-time use only to encourage account creation
+- **⏱️ Session-Based Tracking:** Unique session ID tracking prevents reuse across browser sessions
+- **🚫 Automatic Expiration:** Demo account expires on logout or after 30-minute timeout
+- **📊 Usage Monitoring:** Real-time tracking of demo account usage and availability
+- **🎨 Visual Indicators:** Clear status display in login form and admin dashboard
+- **⚠️ User Messaging:** Informative messages about demo limitations and account creation benefits
+- **🔄 Development Reset:** Reset functionality for testing (development mode only)
+- **📈 Admin Monitoring:** Demo account usage statistics in administrator dashboard
+- **🛡️ Backend Validation:** Server-side validation of demo account restrictions
+- **💡 User Guidance:** Encourages users to create personal accounts for continued access
 
 ### 🔗 Backend Integration (FIXED!)
 - **🌐 Offline-First Architecture** - Works perfectly without backend, syncs when available
@@ -187,10 +199,13 @@ npm start
 
 ### 🔐 Authentication Accounts
 
-#### Demo Account (Regular User)
+#### Demo Account (First-Time Use Only)
 - **Email:** demo@fitlife.com
 - **Password:** demo123
+- **Policy:** ⚠️ **First-time use only** - Expires after logout or session end
 - **Features:** Full access to all fitness features with pre-configured profile
+- **Duration:** 30-minute session timeout or until logout
+- **Restriction:** Cannot be reused after expiration - encourages account creation
 
 #### Administrator Account (System Monitoring)
 - **Email:** administrator@fitlife.com
