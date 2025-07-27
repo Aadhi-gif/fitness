@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MessageCircle, Send, Bot, User, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageCircle, Send, Bot, User, CheckCircle, AlertTriangle, Info, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 
 interface Message {
   id: number;
@@ -36,6 +36,96 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
+
+  // Initialize speech recognition and synthesis
+  useEffect(() => {
+    // Check for speech recognition support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setSpeechSupported(true);
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInputMessage(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+
+    // Check for speech synthesis support
+    if ('speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+    };
+  }, []);
+
+  // Speech recognition methods
+  const startListening = () => {
+    if (recognitionRef.current && speechSupported) {
+      setIsListening(true);
+      recognitionRef.current.start();
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
+  // Text-to-speech method
+  const speakText = (text: string) => {
+    if (synthRef.current && voiceEnabled) {
+      // Cancel any ongoing speech
+      synthRef.current.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      utterance.volume = 0.8;
+
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+
+      synthRef.current.speak(utterance);
+    }
+  };
+
+  const stopSpeaking = () => {
+    if (synthRef.current) {
+      synthRef.current.cancel();
+      setIsSpeaking(false);
+    }
+  };
 
   const getAssistantResponse = (userMessage: string): { content: string; category: 'success' | 'warning' | 'info' } => {
     const message = userMessage.toLowerCase();
@@ -114,10 +204,11 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
+    const userMessageText = inputMessage;
     const newUserMessage: Message = {
       id: messages.length + 1,
       type: 'user',
-      content: inputMessage,
+      content: userMessageText,
       timestamp: new Date()
     };
 
@@ -127,7 +218,7 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
 
     // Simulate typing delay
     setTimeout(() => {
-      const response = getAssistantResponse(inputMessage);
+      const response = getAssistantResponse(userMessageText);
       const assistantMessage: Message = {
         id: messages.length + 2,
         type: 'assistant',
@@ -138,6 +229,11 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
 
       setMessages(prev => [...prev, assistantMessage]);
       setIsTyping(false);
+
+      // Speak the response if voice is enabled
+      if (voiceEnabled) {
+        speakText(response.content);
+      }
     }, 1500);
   };
 
@@ -156,11 +252,43 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-3 bg-green-100 rounded-xl">
-          <MessageCircle className="w-6 h-6 text-green-600" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-green-100 rounded-xl">
+            <MessageCircle className="w-6 h-6 text-green-600" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">AI Fitness Assistant</h2>
+            <p className="text-sm text-gray-600">Voice-enabled fitness guidance</p>
+          </div>
         </div>
-        <h2 className="text-2xl font-bold text-gray-800">Fitness Assistant</h2>
+
+        {/* Voice Controls */}
+        <div className="flex items-center gap-2">
+          {speechSupported && (
+            <button
+              onClick={() => setVoiceEnabled(!voiceEnabled)}
+              className={`p-2 rounded-lg transition-all ${
+                voiceEnabled
+                  ? 'bg-green-100 text-green-600 hover:bg-green-200'
+                  : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+              }`}
+              title={voiceEnabled ? 'Voice responses enabled' : 'Voice responses disabled'}
+            >
+              {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+            </button>
+          )}
+
+          {isSpeaking && (
+            <button
+              onClick={stopSpeaking}
+              className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-all"
+              title="Stop speaking"
+            >
+              <VolumeX className="w-5 h-5" />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="h-96 overflow-y-auto mb-6 space-y-4 p-4 bg-gray-50 rounded-xl">
@@ -225,18 +353,37 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
       </div>
 
       <div className="flex gap-3">
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          placeholder="Ask me anything about fitness, diet, or exercise..."
-          className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-          disabled={isTyping}
-        />
+        <div className="flex-1 relative">
+          <input
+            type="text"
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            placeholder={isListening ? "Listening..." : "Ask me anything about fitness, diet, or exercise..."}
+            className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            disabled={isTyping || isListening}
+          />
+
+          {/* Voice Input Button */}
+          {speechSupported && (
+            <button
+              onClick={isListening ? stopListening : startListening}
+              disabled={isTyping}
+              className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-lg transition-all ${
+                isListening
+                  ? 'bg-red-100 text-red-600 hover:bg-red-200 animate-pulse'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              title={isListening ? 'Stop listening' : 'Start voice input'}
+            >
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
+
         <button
           onClick={handleSendMessage}
-          disabled={!inputMessage.trim() || isTyping}
+          disabled={!inputMessage.trim() || isTyping || isListening}
           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Send className="w-5 h-5" />

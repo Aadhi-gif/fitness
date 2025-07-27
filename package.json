@@ -1,16 +1,18 @@
 {
   "name": "fitlife-pro",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://aadhi-gif.github.io/fitness",
+  "description": "AI-powered fitness and diet application with voice assistant",
+  "keywords": ["fitness", "diet", "ai", "voice-assistant", "health", "nutrition"],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",

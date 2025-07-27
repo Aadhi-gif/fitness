@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/fitness/',
+  base: '/', // Changed from '/fitness/' for Vercel deployment
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -17,5 +17,13 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
+  },
+  server: {
+    port: 3000,
+    host: true,
+  },
+  preview: {
+    port: 3000,
+    host: true,
   },
 });
