@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-dmbihqnbr-aadhithyas-projects-adc44de8.vercel.app](https://fitness-dmbihqnbr-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-7b584t6pd-aadhithyas-projects-adc44de8.vercel.app](https://fitness-7b584t6pd-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including AI voice assistant
+- **Features:** All features including enhanced AI voice assistant
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -21,10 +21,11 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 
 ## ✨ Features
 
-### 🤖 AI Voice Assistant (NEW!)
+### 🤖 Advanced AI Voice Assistant (ChatGPT-Level Knowledge!)
 - **Speech Recognition** - Voice input for hands-free interaction
 - **Text-to-Speech** - AI responses with natural voice output
-- **Intelligent Responses** - Context-aware fitness and nutrition guidance
+- **Comprehensive Knowledge** - Advanced fitness science comparable to ChatGPT/DeepSeek
+- **Specialized Expertise** - Nutrition, training, health conditions, sports performance
 - **Voice Controls** - Toggle voice features on/off, stop speaking
 - **Browser Support** - Works in Chrome, Edge, Safari (latest versions)
 
@@ -88,12 +89,12 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 3. **Voice Output** - AI responses will be spoken automatically
 4. **Voice Controls** - Stop speaking anytime with the stop button
 
-#### Supported Voice Commands
-- "How many calories should I eat?"
-- "I'm feeling hungry, what should I eat?"
-- "I'm sore after my workout"
-- "I'm a beginner, how should I start?"
-- "I need motivation to continue"
+#### Supported Voice Commands (Extensive Knowledge Base)
+- **Nutrition:** "How many calories should I eat?", "What are macros?", "Tell me about intermittent fasting"
+- **Training:** "I'm a beginner, how should I start?", "Explain periodization", "What's the best rep range for muscle growth?"
+- **Health:** "I'm sore after my workout", "How do hormones affect fitness?", "What supplements should I take?"
+- **Specialized:** "Training during menstrual cycle", "Exercise for seniors", "Sports performance tips"
+- **Psychology:** "I need motivation to continue", "How to build habits", "Dealing with stress"
 
 ## 🛠️ Available Scripts
 
