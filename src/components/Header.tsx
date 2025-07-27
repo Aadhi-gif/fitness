@@ -1,24 +1,11 @@
 import React, { useState } from 'react';
-import { Heart, LogIn, UserPlus, User, LogOut, Settings } from 'lucide-react';
+import { Dumbbell, User, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import AuthModal from './AuthModal';
 import BackendStatus from './BackendStatus';
 
 const Header: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showUserMenu, setShowUserMenu] = useState(false);
-
-  const handleLoginClick = () => {
-    setAuthModalMode('login');
-    setIsAuthModalOpen(true);
-  };
-
-  const handleRegisterClick = () => {
-    setAuthModalMode('register');
-    setIsAuthModalOpen(true);
-  };
 
   const handleLogout = () => {
     logout();
@@ -27,18 +14,18 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <header className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-2xl sticky top-0 z-40 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl">
-                <Heart className="w-8 h-8 text-white" />
+              <div className="p-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl shadow-lg">
+                <Dumbbell className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
                   FitLife Pro
                 </h1>
-                <p className="text-gray-600 text-sm">Your Personal Fitness & Nutrition Companion</p>
+                <p className="text-gray-300 text-sm">Your Personal Fitness & Nutrition Companion</p>
               </div>
             </div>
 
@@ -110,12 +97,6 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
-
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-        initialMode={authModalMode}
-      />
     </>
   );
 };

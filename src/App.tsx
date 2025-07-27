@@ -8,10 +8,7 @@ import CalorieCalculator from './components/CalorieCalculator';
 import DietPlan from './components/DietPlan';
 import ExerciseRoutines from './components/ExerciseRoutines';
 import Assistant from './components/Assistant';
-import WelcomeBanner from './components/WelcomeBanner';
-import FloatingAuthButton from './components/FloatingAuthButton';
-import QuickAuthSidebar from './components/QuickAuthSidebar';
-import StickyAuthBar from './components/StickyAuthBar';
+import UnifiedAuth from './components/UnifiedAuth';
 import AdminDashboard from './components/AdminDashboard';
 
 interface UserProfile {
@@ -64,15 +61,24 @@ function App() {
 
   const targetCalories = userProfile ? calculateTargetCalories(userProfile) : 0;
 
+  // Show unified auth if not authenticated
+  if (!isAuthenticated) {
+    return <UnifiedAuth />;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Welcome Banner - shows at top for non-authenticated users */}
-      <WelcomeBanner />
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative">
+      {/* Fitness Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: '60px 60px'
+        }} />
+      </div>
 
-      <Header />
-
-      {/* Quick Auth Sidebar - slides in from left */}
-      <QuickAuthSidebar />
+      {/* Content Overlay */}
+      <div className="relative z-10">
+        <Header />
 
       <ProtectedRoute>
         {isAdmin ? (
@@ -80,20 +86,20 @@ function App() {
         ) : (
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {!userProfile ? (
-              <div className="text-center mb-8">
-                <h2 className="text-4xl font-bold text-gray-800 mb-4">
+              <div className="text-center mb-8 bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+                <h2 className="text-4xl font-bold text-white mb-4">
                   Welcome to Your Fitness Journey
                 </h2>
-                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
                   Get personalized diet plans, exercise routines, and expert guidance based on your unique goals and body metrics.
                 </p>
               </div>
             ) : (
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+              <div className="text-center mb-8 bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+                <h2 className="text-3xl font-bold text-white mb-2">
                   Welcome back, {userProfile.name}!
                 </h2>
-                <p className="text-lg text-gray-600">
+                <p className="text-lg text-gray-300">
                   Your personalized fitness plan is ready. Let's achieve your goals together!
                 </p>
               </div>
@@ -161,12 +167,7 @@ function App() {
           </div>
         </footer>
       )}
-
-      {/* Floating Action Button - bottom right corner */}
-      <FloatingAuthButton />
-
-      {/* Sticky Auth Bar - appears at bottom when scrolling */}
-      <StickyAuthBar />
+      </div>
     </div>
   );
 }
