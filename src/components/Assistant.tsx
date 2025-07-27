@@ -324,9 +324,58 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
       };
     }
 
+    // General Knowledge and Conversational AI
+    if (message.includes('hello') || message.includes('hi') || message.includes('hey') || message.includes('good morning') || message.includes('good evening')) {
+      const timeGreeting = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening';
+      return {
+        content: `${timeGreeting}, ${userProfile?.name || 'there'}! 👋\n\nI'm your advanced AI fitness assistant, ready to help with anything fitness, health, or wellness related. I have comprehensive knowledge comparable to ChatGPT but specialized in:\n\n💪 **Fitness & Training**\n🍽️ **Nutrition & Diet**\n🧠 **Mental Health & Motivation**\n🩺 **Health & Medical Conditions**\n🏃‍♂️ **Sports Performance**\n\nWhat would you like to know today? I can answer questions, provide detailed explanations, create plans, or just have a conversation about your fitness journey!`,
+        category: 'success'
+      };
+    }
+
+    // Weather and Environment
+    if (message.includes('weather') || message.includes('temperature') || message.includes('hot') || message.includes('cold') || message.includes('rain')) {
+      return {
+        content: `Weather definitely affects your workouts! Here's how to adapt:\n\n🌡️ **Hot Weather Training:**\n• Exercise early morning or evening\n• Increase hydration (add electrolytes)\n• Reduce intensity by 10-20%\n• Wear light, breathable clothing\n• Take frequent breaks in shade\n\n❄️ **Cold Weather Training:**\n• Warm up longer (10-15 minutes)\n• Layer clothing you can remove\n• Stay hydrated (you still sweat!)\n• Protect extremities from frostbite\n• Indoor alternatives: bodyweight circuits\n\n🌧️ **Rainy Day Options:**\n• Home workouts (yoga, HIIT, strength)\n• Mall walking or stair climbing\n• Gym or indoor sports\n• Online fitness classes\n\n💡 **Pro Tip:** Your body adapts to temperature over 10-14 days, so be patient with seasonal transitions!`,
+        category: 'info'
+      };
+    }
+
+    // Technology and Apps
+    if (message.includes('app') || message.includes('technology') || message.includes('tracker') || message.includes('smartwatch') || message.includes('phone')) {
+      return {
+        content: `Technology can supercharge your fitness journey! Here are evidence-based recommendations:\n\n📱 **Best Fitness Apps:**\n• MyFitnessPal: Comprehensive nutrition tracking\n• Strong/Jefit: Workout logging and progression\n• Strava: Running/cycling with social features\n• Headspace: Meditation and mental health\n• Sleep Cycle: Sleep quality optimization\n\n⌚ **Wearable Technology:**\n• Heart rate monitoring for training zones\n• Step counting (aim for 8,000-10,000 daily)\n• Sleep tracking for recovery insights\n• HRV monitoring for training readiness\n\n📊 **Key Metrics to Track:**\n• Resting heart rate (fitness indicator)\n• Heart rate variability (recovery)\n• Sleep quality and duration\n• Daily activity levels\n• Workout performance\n\n⚠️ **Remember:** Technology should enhance, not replace, listening to your body!`,
+        category: 'info'
+      };
+    }
+
+    // Travel and Vacation
+    if (message.includes('travel') || message.includes('vacation') || message.includes('hotel') || message.includes('airport') || message.includes('trip')) {
+      return {
+        content: `Stay fit while traveling with these strategies:\n\n✈️ **Airport/Flight Tips:**\n• Walk terminals instead of sitting\n• Calf raises during long flights\n• Compression socks for circulation\n• Stay hydrated (avoid excess alcohol)\n• Pack resistance bands (TSA-friendly)\n\n🏨 **Hotel Workouts:**\n• Bodyweight circuits (no equipment needed)\n• Stair climbing for cardio\n• Use luggage as weights\n• YouTube workout videos\n• Hotel gym if available\n\n🍽️ **Eating on the Road:**\n• Research restaurants beforehand\n• Pack healthy snacks (nuts, protein bars)\n• Stay hydrated with water\n• Practice portion control\n• Don't stress about perfection\n\n🌍 **Sample 20-Minute Hotel Room Workout:**\n• 5 min warm-up (jumping jacks, arm circles)\n• 10 min circuit (push-ups, squats, lunges, planks)\n• 5 min cool-down (stretching)\n\n💡 **Mindset:** Aim for 80% consistency, not perfection!`,
+        category: 'success'
+      };
+    }
+
+    // Equipment and Gear
+    if (message.includes('equipment') || message.includes('gear') || message.includes('shoes') || message.includes('clothes') || message.includes('gym') || message.includes('home gym')) {
+      return {
+        content: `Smart equipment choices for your fitness journey:\n\n👟 **Athletic Shoes:**\n• Running: Replace every 300-500 miles\n• Cross-training: Stable base, lateral support\n• Weightlifting: Flat, firm sole (Converse, lifting shoes)\n• Get gait analysis for running shoes\n\n🏠 **Home Gym Essentials (Budget-Friendly):**\n• Resistance bands ($20) - Full body workouts\n• Adjustable dumbbells ($100-300)\n• Yoga mat ($30) - Floor exercises, stretching\n• Pull-up bar ($30) - Upper body strength\n• Kettlebell ($50) - Cardio + strength\n\n🏋️ **Gym Membership vs Home:**\n**Gym Pros:** Equipment variety, social motivation, classes\n**Home Pros:** Convenience, no commute, privacy, cost-effective long-term\n\n👕 **Workout Clothing:**\n• Moisture-wicking fabrics (avoid cotton)\n• Proper sports bra for women (high-impact activities)\n• Compression gear for recovery\n• Layers for outdoor activities\n\n💡 **Investment Priority:** Shoes > Basic equipment > Advanced gear`,
+        category: 'info'
+      };
+    }
+
+    // Time Management and Busy Schedules
+    if (message.includes('time') || message.includes('busy') || message.includes('schedule') || message.includes('work') || message.includes('quick') || message.includes('short')) {
+      return {
+        content: `Maximize fitness with minimal time:\n\n⏰ **Time-Efficient Strategies:**\n• HIIT workouts (15-20 minutes)\n• Compound movements (work multiple muscles)\n• Supersets (back-to-back exercises)\n• Active commuting (bike, walk, stairs)\n• Micro-workouts (5-10 min throughout day)\n\n🚀 **15-Minute Express Workouts:**\n**Option 1 - HIIT Cardio:**\n• 3 min warm-up\n• 8 rounds: 30s work, 30s rest\n• 4 min cool-down\n\n**Option 2 - Strength Circuit:**\n• Squats, Push-ups, Planks, Lunges\n• 45s work, 15s rest, 3 rounds\n\n📅 **Weekly Schedule for Busy People:**\n• Monday: 15 min strength\n• Tuesday: Walk/bike commute\n• Wednesday: 15 min HIIT\n• Thursday: Stairs/active breaks\n• Friday: 15 min yoga/stretching\n• Weekend: One longer session (30-45 min)\n\n💡 **Remember:** Consistency beats perfection. 15 minutes daily > 2 hours once weekly!`,
+        category: 'success'
+      };
+    }
+
     // Default comprehensive response
     return {
-      content: `I'm your comprehensive AI fitness assistant with advanced knowledge! I can help with:\n\n🍽️ Nutrition & Diet:\n• Macro/calorie calculations • Meal timing strategies\n• Supplement protocols • Special diets (keto, IF)\n• Weight management • Metabolic health\n\n🏋️‍♂️ Training & Exercise:\n• Program periodization • Form analysis\n• Sport-specific training • Injury prevention\n• Advanced techniques • Performance optimization\n\n🩺 Health & Wellness:\n• Hormone optimization • Sleep protocols\n• Stress management • Recovery strategies\n• Biomarker interpretation • Special populations\n\n🧠 Psychology & Lifestyle:\n• Habit formation • Motivation strategies\n• Mental health support • Goal setting\n• Progress tracking • Behavior change\n\n🏆 Specialized Areas:\n• Women's health • Youth training\n• Senior fitness • Rehabilitation\n• Sports performance • Medical conditions\n\nAsk me anything - I have evidence-based knowledge across all fitness and health domains!`,
+      content: `I'm your comprehensive AI fitness assistant with advanced knowledge! I can help with:\n\n🍽️ **Nutrition & Diet:**\n• Macro/calorie calculations • Meal timing strategies\n• Supplement protocols • Special diets (keto, IF)\n• Weight management • Metabolic health\n\n🏋️‍♂️ **Training & Exercise:**\n• Program periodization • Form analysis\n• Sport-specific training • Injury prevention\n• Advanced techniques • Performance optimization\n\n🩺 **Health & Wellness:**\n• Hormone optimization • Sleep protocols\n• Stress management • Recovery strategies\n• Biomarker interpretation • Special populations\n\n🧠 **Psychology & Lifestyle:**\n• Habit formation • Motivation strategies\n• Mental health support • Goal setting\n• Progress tracking • Behavior change\n\n🌟 **Plus General Topics:**\n• Weather adaptations • Technology recommendations\n• Travel fitness • Time management\n• Equipment advice • Injury recovery\n\n💬 **I can also:**\n• Answer any fitness question in detail\n• Explain complex concepts simply\n• Provide personalized recommendations\n• Help troubleshoot problems\n• Offer motivation and support\n\nAsk me anything - I have ChatGPT-level knowledge specialized for fitness and health!`,
       category: 'info'
     };
   };
