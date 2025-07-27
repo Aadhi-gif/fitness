@@ -1,13 +1,32 @@
-# 🏋️‍♂️ FitLife Pro - Complete Fitness & Nutrition Application
+# 🏋️‍♂️ FitLife Pro - AI-Powered Fitness & Nutrition Application
 
-A comprehensive React-based fitness and nutrition application with personalized diet plans, exercise routines, calorie tracking, and AI assistance.
+A comprehensive React-based fitness and nutrition application with **AI voice assistant**, personalized diet plans, exercise routines, calorie tracking, and intelligent guidance.
 
 ![FitLife Pro](https://img.shields.io/badge/React-18.3.1-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-blue)
 ![Vite](https://img.shields.io/badge/Vite-5.4.2-purple)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.1-cyan)
 
+## 🌐 Live Deployments
+
+### 🚀 Vercel (Primary)
+- **URL:** [https://fitness-dmbihqnbr-aadhithyas-projects-adc44de8.vercel.app](https://fitness-dmbihqnbr-aadhithyas-projects-adc44de8.vercel.app)
+- **Status:** ✅ Live and Fully Functional
+- **Features:** All features including AI voice assistant
+
+### 🐙 GitHub Pages (Secondary)
+- **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
+- **Status:** ✅ Live and Functional
+- **Features:** Full application (voice features may be limited)
+
 ## ✨ Features
+
+### 🤖 AI Voice Assistant (NEW!)
+- **Speech Recognition** - Voice input for hands-free interaction
+- **Text-to-Speech** - AI responses with natural voice output
+- **Intelligent Responses** - Context-aware fitness and nutrition guidance
+- **Voice Controls** - Toggle voice features on/off, stop speaking
+- **Browser Support** - Works in Chrome, Edge, Safari (latest versions)
 
 ### 🔐 Multiple Authentication Access Methods
 - **Enhanced Welcome Landing Page** - Prominent sign-up/sign-in buttons with demo credentials
@@ -23,7 +42,7 @@ A comprehensive React-based fitness and nutrition application with personalized 
 - **Calorie Calculator** - BMR-based calculations using Mifflin-St Jeor Equation
 - **Personalized Diet Plans** - Goal-based meal planning (lose/maintain/gain weight)
 - **Exercise Routines** - Targeted workouts for different muscle groups
-- **AI Fitness Assistant** - Interactive chat for form corrections and tips
+- **AI Fitness Assistant** - Interactive chat with voice support for form corrections and tips
 - **Progress Tracking** - Visual progress indicators and analytics
 
 ### 🎨 Design Features
@@ -57,11 +76,24 @@ A comprehensive React-based fitness and nutrition application with personalized 
    ```
 
 4. **Open your browser**
-   Navigate to `http://localhost:5173`
+   Navigate to `http://localhost:3001`
 
 ### Demo Account
 - **Email:** demo@fitlife.com
 - **Password:** demo123
+
+### 🎤 Voice Assistant Usage
+1. **Enable Voice** - Click the volume icon in the AI assistant header
+2. **Voice Input** - Click the microphone button to speak your question
+3. **Voice Output** - AI responses will be spoken automatically
+4. **Voice Controls** - Stop speaking anytime with the stop button
+
+#### Supported Voice Commands
+- "How many calories should I eat?"
+- "I'm feeling hungry, what should I eat?"
+- "I'm sore after my workout"
+- "I'm a beginner, how should I start?"
+- "I need motivation to continue"
 
 ## 🛠️ Available Scripts
 
@@ -69,6 +101,8 @@ A comprehensive React-based fitness and nutrition application with personalized 
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
+- `npm run deploy` - Deploy to GitHub Pages
+- `npm run vercel-build` - Build for Vercel deployment
 
 ## 📁 Project Structure
 
@@ -90,7 +124,8 @@ src/
 ├── contexts/            # React contexts
 │   └── AuthContext.tsx  # Authentication state management
 ├── types/               # TypeScript type definitions
-│   └── auth.ts
+│   ├── auth.ts
+│   └── speech.d.ts      # Speech API type definitions
 ├── App.tsx             # Main application component
 ├── main.tsx            # Application entry point
 └── index.css           # Global styles
@@ -116,9 +151,11 @@ src/
 ## 🔧 Technologies Used
 
 - **Frontend Framework:** React 18.3.1 with TypeScript
-- **Build Tool:** Vite 5.4.2
-- **Styling:** Tailwind CSS 3.4.1
+- **Build Tool:** Vite 5.4.19
+- **Styling:** Tailwind CSS 3.4.17
 - **Icons:** Lucide React 0.344.0
+- **Voice APIs:** Web Speech API (SpeechRecognition + SpeechSynthesis)
+- **Deployment:** Vercel + GitHub Pages
 - **Linting:** ESLint with TypeScript support
 - **State Management:** React Context API
 
