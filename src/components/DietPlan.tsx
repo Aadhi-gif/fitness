@@ -25,6 +25,10 @@ interface FoodPreferences {
   dislikedFoods: string[];
   preferredProteins: string[];
   location: string;
+  country: string;
+  region: string;
+  localTastes: string[];
+  traditionalFoods: boolean;
 }
 
 interface DietPlanProps {
@@ -45,7 +49,11 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
     allergies: [],
     dislikedFoods: [],
     preferredProteins: [],
-    location: 'global'
+    location: 'global',
+    country: '',
+    region: '',
+    localTastes: [],
+    traditionalFoods: true
   });
   const [hasSetPreferences, setHasSetPreferences] = useState(false);
 
@@ -90,6 +98,100 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
     }
   };
 
+  const getCountrySpecificMeals = (country: string, region: string, localTastes: string[], traditionalFoods: boolean) => {
+    const countryMeals: { [key: string]: any } = {
+      india: {
+        breakfast: [
+          { name: "Masala Dosa", description: "Crispy rice crepe with spiced potato filling, served with coconut chutney and sambar" },
+          { name: "Poha", description: "Flattened rice with onions, mustard seeds, curry leaves, and fresh coriander" },
+          { name: "Upma", description: "Semolina porridge with vegetables, mustard seeds, and curry leaves" },
+          { name: "Paratha with Curd", description: "Whole wheat flatbread stuffed with vegetables, served with yogurt and pickle" },
+          { name: "Idli Sambar", description: "Steamed rice cakes with lentil curry and coconut chutney" }
+        ],
+        lunch: [
+          { name: "Dal Rice Thali", description: "Complete meal with lentil curry, basmati rice, vegetables, roti, and pickle" },
+          { name: "Biryani", description: "Fragrant basmati rice with spiced meat/vegetables, raita, and boiled egg" },
+          { name: "Chole Bhature", description: "Spiced chickpea curry with deep-fried bread and onion salad" },
+          { name: "Rajma Chawal", description: "Kidney bean curry with steamed rice and fresh salad" },
+          { name: "Sambar Rice", description: "South Indian lentil curry with rice, vegetables, and papadum" }
+        ],
+        dinner: [
+          { name: "Paneer Butter Masala", description: "Creamy tomato-based cottage cheese curry with naan and rice" },
+          { name: "Chicken Curry", description: "Traditional spiced chicken curry with roti, rice, and vegetables" },
+          { name: "Fish Curry", description: "Coconut-based fish curry with rice and steamed vegetables" },
+          { name: "Vegetable Korma", description: "Mixed vegetables in rich cashew-coconut gravy with pulao rice" },
+          { name: "Mutton Curry", description: "Slow-cooked spiced mutton with basmati rice and raita" }
+        ],
+        snack: [
+          { name: "Samosa with Chutney", description: "Crispy pastry with spiced potato filling and mint-coriander chutney" },
+          { name: "Bhel Puri", description: "Mumbai street food with puffed rice, vegetables, and tangy chutneys" },
+          { name: "Masala Chai with Biscuits", description: "Spiced tea with ginger and cardamom, served with digestive biscuits" },
+          { name: "Fruit Chaat", description: "Mixed seasonal fruits with chaat masala, lemon, and mint" }
+        ]
+      },
+      usa: {
+        breakfast: [
+          { name: "Pancakes with Syrup", description: "Fluffy buttermilk pancakes with maple syrup, butter, and fresh berries" },
+          { name: "Eggs Benedict", description: "English muffin with poached eggs, ham, and hollandaise sauce" },
+          { name: "Avocado Toast", description: "Multigrain toast with smashed avocado, tomatoes, and everything seasoning" },
+          { name: "Breakfast Burrito", description: "Scrambled eggs, cheese, bacon, and hash browns in a flour tortilla" },
+          { name: "Oatmeal Bowl", description: "Steel-cut oats with fresh fruits, nuts, and honey" }
+        ],
+        lunch: [
+          { name: "Classic Burger", description: "Beef patty with lettuce, tomato, cheese, and fries" },
+          { name: "Caesar Salad", description: "Romaine lettuce with grilled chicken, croutons, and Caesar dressing" },
+          { name: "BBQ Pulled Pork", description: "Slow-cooked pulled pork sandwich with coleslaw and sweet potato fries" },
+          { name: "Club Sandwich", description: "Triple-decker with turkey, bacon, lettuce, tomato, and mayo" },
+          { name: "Mac and Cheese", description: "Creamy cheese pasta with breadcrumb topping and side salad" }
+        ],
+        dinner: [
+          { name: "Grilled Steak", description: "Ribeye steak with mashed potatoes, green beans, and dinner roll" },
+          { name: "Fried Chicken", description: "Crispy fried chicken with mac and cheese and cornbread" },
+          { name: "Salmon Fillet", description: "Grilled salmon with quinoa pilaf and roasted asparagus" },
+          { name: "Meatloaf", description: "Classic meatloaf with mashed potatoes, gravy, and steamed broccoli" },
+          { name: "Shrimp and Grits", description: "Southern-style shrimp over creamy grits with andouille sausage" }
+        ],
+        snack: [
+          { name: "Trail Mix", description: "Mixed nuts, dried fruits, and dark chocolate chips" },
+          { name: "Apple with Peanut Butter", description: "Fresh apple slices with natural peanut butter" },
+          { name: "Protein Smoothie", description: "Banana, berries, protein powder, and almond milk" },
+          { name: "Cheese and Crackers", description: "Assorted cheeses with whole grain crackers and grapes" }
+        ]
+      },
+      italy: {
+        breakfast: [
+          { name: "Cappuccino e Cornetto", description: "Italian coffee with flaky pastry filled with jam or cream" },
+          { name: "Frittata", description: "Italian omelet with vegetables, herbs, and Parmigiano cheese" },
+          { name: "Ricotta Pancakes", description: "Light pancakes with ricotta, lemon zest, and fresh berries" },
+          { name: "Bruschetta", description: "Toasted bread with tomatoes, basil, garlic, and olive oil" },
+          { name: "Yogurt Parfait", description: "Greek yogurt with honey, nuts, and seasonal fruits" }
+        ],
+        lunch: [
+          { name: "Pasta Carbonara", description: "Spaghetti with eggs, pancetta, Pecorino Romano, and black pepper" },
+          { name: "Margherita Pizza", description: "Classic pizza with tomato sauce, mozzarella, and fresh basil" },
+          { name: "Risotto Milanese", description: "Creamy saffron risotto with Parmigiano and white wine" },
+          { name: "Caprese Salad", description: "Fresh mozzarella, tomatoes, basil, and balsamic reduction" },
+          { name: "Minestrone Soup", description: "Vegetable soup with beans, pasta, and fresh herbs" }
+        ],
+        dinner: [
+          { name: "Osso Buco", description: "Braised veal shanks with saffron risotto and gremolata" },
+          { name: "Chicken Parmigiana", description: "Breaded chicken with tomato sauce, mozzarella, and pasta" },
+          { name: "Seafood Linguine", description: "Linguine with mixed seafood in white wine and garlic sauce" },
+          { name: "Eggplant Parmigiana", description: "Layered eggplant with tomato sauce, mozzarella, and basil" },
+          { name: "Veal Piccata", description: "Pan-seared veal with lemon, capers, and angel hair pasta" }
+        ],
+        snack: [
+          { name: "Gelato", description: "Artisanal Italian ice cream with seasonal flavors" },
+          { name: "Antipasto Plate", description: "Cured meats, cheeses, olives, and marinated vegetables" },
+          { name: "Espresso with Biscotti", description: "Strong Italian coffee with almond biscotti" },
+          { name: "Bruschetta Trio", description: "Three varieties of bruschetta with different toppings" }
+        ]
+      }
+    };
+
+    return countryMeals[country] || countryMeals.usa; // Default to USA if country not found
+  };
+
   const customizeMealForPreferences = (meal: Meal, preferences: FoodPreferences): Meal => {
     let customizedMeal = { ...meal };
 
@@ -99,25 +201,47 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
       ? preferences.cookingTime
       : preferences.cookingTime + ' min';
 
+    // If country is selected, use country-specific meals
+    if (preferences.country && preferences.traditionalFoods) {
+      const countryMeals = getCountrySpecificMeals(preferences.country, preferences.region, preferences.localTastes, preferences.traditionalFoods);
+
+      // Randomly select a meal from the country-specific options
+      const mealType = meal.name.toLowerCase().includes('breakfast') ? 'breakfast' :
+                      meal.name.toLowerCase().includes('lunch') ? 'lunch' :
+                      meal.name.toLowerCase().includes('dinner') ? 'dinner' : 'snack';
+
+      if (countryMeals[mealType] && countryMeals[mealType].length > 0) {
+        const randomMeal = countryMeals[mealType][Math.floor(Math.random() * countryMeals[mealType].length)];
+        customizedMeal.name = randomMeal.name;
+        customizedMeal.description = randomMeal.description;
+      }
+    }
+
     // Adjust meal based on dietary restrictions
     if (preferences.dietaryRestrictions.includes('Vegetarian') &&
-        (meal.description.toLowerCase().includes('chicken') ||
-         meal.description.toLowerCase().includes('beef') ||
-         meal.description.toLowerCase().includes('fish'))) {
-      customizedMeal.name = meal.name.replace(/Chicken|Beef|Fish|Salmon|Cod|Turkey|Lamb/gi, 'Tofu');
-      customizedMeal.description = meal.description.replace(/chicken|beef|fish|salmon|cod|turkey|lamb/gi, 'tofu');
+        (customizedMeal.description.toLowerCase().includes('chicken') ||
+         customizedMeal.description.toLowerCase().includes('beef') ||
+         customizedMeal.description.toLowerCase().includes('fish') ||
+         customizedMeal.description.toLowerCase().includes('meat'))) {
+      customizedMeal.name = customizedMeal.name.replace(/Chicken|Beef|Fish|Salmon|Cod|Turkey|Lamb|Meat/gi, 'Paneer');
+      customizedMeal.description = customizedMeal.description.replace(/chicken|beef|fish|salmon|cod|turkey|lamb|meat/gi, 'paneer');
     }
 
     if (preferences.dietaryRestrictions.includes('Vegan')) {
       customizedMeal.description = customizedMeal.description
-        .replace(/cheese|yogurt|milk|eggs/gi, 'plant-based alternatives');
+        .replace(/cheese|yogurt|milk|eggs|paneer/gi, 'plant-based alternatives');
     }
 
-    // Adjust spice level in description
-    if (preferences.spiceLevel === 'mild') {
-      customizedMeal.description += ' (mild spices)';
-    } else if (preferences.spiceLevel === 'hot') {
+    // Adjust spice level based on local tastes
+    if (preferences.localTastes.includes('Spicy & Hot') || preferences.localTastes.includes('Spicy Sichuan')) {
       customizedMeal.description += ' (extra spicy)';
+    } else if (preferences.localTastes.includes('Mild & Balanced') || preferences.spiceLevel === 'mild') {
+      customizedMeal.description += ' (mild spices)';
+    }
+
+    // Add regional style if specified
+    if (preferences.region) {
+      customizedMeal.description += ` (${preferences.region} style)`;
     }
 
     return customizedMeal;
@@ -477,7 +601,15 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
               <h2 className="text-2xl font-bold text-gray-800">Your Personalized Diet Plan</h2>
               <p className="text-gray-600">
                 {hasSetPreferences ? (
-                  <>Budget: {getBudgetIcon(foodPreferences.budgetRange)} {getCostEstimate(foodPreferences.budgetRange)}/meal</>
+                  <>
+                    {foodPreferences.country && (
+                      <span className="mr-4">
+                        🌍 {foodPreferences.country.charAt(0).toUpperCase() + foodPreferences.country.slice(1)}
+                        {foodPreferences.region && ` (${foodPreferences.region})`}
+                      </span>
+                    )}
+                    Budget: {getBudgetIcon(foodPreferences.budgetRange)} {getCostEstimate(foodPreferences.budgetRange)}/meal
+                  </>
                 ) : (
                   'Customize your meal preferences for better recommendations'
                 )}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, DollarSign, Heart, Utensils, Clock, MapPin, AlertCircle } from 'lucide-react';
+import { X, DollarSign, Heart, Utensils, Clock, MapPin, AlertCircle, Globe, Flag } from 'lucide-react';
 
 interface FoodPreferences {
   dietaryRestrictions: string[];
@@ -12,6 +12,10 @@ interface FoodPreferences {
   dislikedFoods: string[];
   preferredProteins: string[];
   location: string;
+  country: string;
+  region: string;
+  localTastes: string[];
+  traditionalFoods: boolean;
 }
 
 interface FoodPreferencesModalProps {
@@ -38,7 +42,11 @@ const FoodPreferencesModal: React.FC<FoodPreferencesModalProps> = ({
       allergies: [],
       dislikedFoods: [],
       preferredProteins: [],
-      location: 'global'
+      location: 'global',
+      country: '',
+      region: '',
+      localTastes: [],
+      traditionalFoods: true
     }
   );
 
@@ -59,6 +67,55 @@ const FoodPreferencesModal: React.FC<FoodPreferencesModalProps> = ({
   const proteinOptions = [
     'Chicken', 'Fish', 'Beef', 'Pork', 'Turkey', 'Tofu', 'Legumes', 'Eggs'
   ];
+
+  const countryOptions = [
+    { value: 'india', label: 'India 🇮🇳', flag: '🇮🇳' },
+    { value: 'usa', label: 'United States 🇺🇸', flag: '🇺🇸' },
+    { value: 'italy', label: 'Italy 🇮🇹', flag: '🇮🇹' },
+    { value: 'mexico', label: 'Mexico 🇲🇽', flag: '🇲🇽' },
+    { value: 'japan', label: 'Japan 🇯🇵', flag: '🇯🇵' },
+    { value: 'china', label: 'China 🇨🇳', flag: '🇨🇳' },
+    { value: 'thailand', label: 'Thailand 🇹🇭', flag: '🇹🇭' },
+    { value: 'france', label: 'France 🇫🇷', flag: '🇫🇷' },
+    { value: 'greece', label: 'Greece 🇬🇷', flag: '🇬🇷' },
+    { value: 'spain', label: 'Spain 🇪🇸', flag: '🇪🇸' },
+    { value: 'lebanon', label: 'Lebanon 🇱🇧', flag: '🇱🇧' },
+    { value: 'morocco', label: 'Morocco 🇲🇦', flag: '🇲🇦' },
+    { value: 'brazil', label: 'Brazil 🇧🇷', flag: '🇧🇷' },
+    { value: 'korea', label: 'South Korea 🇰🇷', flag: '🇰🇷' },
+    { value: 'vietnam', label: 'Vietnam 🇻🇳', flag: '🇻🇳' },
+    { value: 'global', label: 'International Mix 🌍', flag: '🌍' }
+  ];
+
+  const getRegionalOptions = (country: string) => {
+    const regions: { [key: string]: string[] } = {
+      india: ['North Indian', 'South Indian', 'Bengali', 'Gujarati', 'Punjabi', 'Maharashtrian', 'Rajasthani', 'Kerala'],
+      usa: ['Southern', 'Tex-Mex', 'California', 'New York', 'Midwest', 'Pacific Northwest', 'Cajun', 'BBQ'],
+      italy: ['Northern Italian', 'Southern Italian', 'Tuscan', 'Sicilian', 'Roman', 'Venetian', 'Neapolitan'],
+      mexico: ['Yucatecan', 'Oaxacan', 'Jalisco', 'Pueblan', 'Veracruz', 'Northern Mexican', 'Central Mexican'],
+      japan: ['Kansai', 'Kanto', 'Kyushu', 'Hokkaido', 'Okinawan', 'Traditional', 'Modern Fusion'],
+      china: ['Sichuan', 'Cantonese', 'Hunan', 'Jiangsu', 'Zhejiang', 'Fujian', 'Beijing', 'Shanghai'],
+      thailand: ['Central Thai', 'Northern Thai', 'Northeastern (Isaan)', 'Southern Thai', 'Royal Thai'],
+      france: ['Provence', 'Normandy', 'Burgundy', 'Alsace', 'Loire Valley', 'Brittany', 'Parisian'],
+      global: ['Fusion', 'International', 'Modern', 'Traditional', 'Street Food', 'Fine Dining']
+    };
+    return regions[country] || [];
+  };
+
+  const getLocalTastes = (country: string) => {
+    const tastes: { [key: string]: string[] } = {
+      india: ['Spicy & Hot', 'Sweet & Savory', 'Tangy & Sour', 'Rich & Creamy', 'Aromatic Spices', 'Street Food Style', 'Home-style Comfort', 'Festival Special'],
+      usa: ['BBQ & Smoky', 'Sweet & Savory', 'Comfort Food', 'Fresh & Light', 'Bold Flavors', 'Fusion Style', 'Classic American', 'Regional Specialties'],
+      italy: ['Fresh & Simple', 'Rich & Creamy', 'Herb-infused', 'Wine-paired', 'Rustic Traditional', 'Modern Italian', 'Seasonal Ingredients'],
+      mexico: ['Spicy & Vibrant', 'Fresh & Zesty', 'Smoky & Earthy', 'Traditional Authentic', 'Street Food', 'Festive & Colorful'],
+      japan: ['Umami Rich', 'Fresh & Clean', 'Delicate & Subtle', 'Traditional Washoku', 'Modern Fusion', 'Seasonal Harmony'],
+      china: ['Spicy Sichuan', 'Sweet & Sour', 'Savory Umami', 'Fresh Cantonese', 'Bold & Aromatic', 'Traditional Flavors'],
+      thailand: ['Spicy & Sour', 'Sweet & Savory', 'Fresh Herbs', 'Coconut Rich', 'Street Food Style', 'Royal Thai'],
+      france: ['Rich & Buttery', 'Wine-infused', 'Herb-crusted', 'Classic Techniques', 'Regional Specialties', 'Elegant Presentation'],
+      global: ['Mild & Balanced', 'Bold & Adventurous', 'Fresh & Healthy', 'Comfort Food', 'Exotic Flavors', 'Fusion Style']
+    };
+    return tastes[country] || tastes.global;
+  };
 
   const budgetRanges = [
     { value: 'budget', label: 'Budget-Friendly ($5-10/meal)', icon: '💰' },
@@ -132,6 +189,106 @@ const FoodPreferencesModal: React.FC<FoodPreferencesModalProps> = ({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Country & Regional Preferences */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Globe className="w-5 h-5 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-800">Country & Regional Preferences</h3>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Flag className="w-4 h-4 inline mr-1" />
+                  Your Country/Region
+                </label>
+                <select
+                  value={preferences.country}
+                  onChange={(e) => {
+                    setPreferences(prev => ({
+                      ...prev,
+                      country: e.target.value,
+                      region: '', // Reset region when country changes
+                      localTastes: [] // Reset local tastes
+                    }));
+                  }}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select your country...</option>
+                  {countryOptions.map((country) => (
+                    <option key={country.value} value={country.value}>
+                      {country.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {preferences.country && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <MapPin className="w-4 h-4 inline mr-1" />
+                    Regional Style
+                  </label>
+                  <select
+                    value={preferences.region}
+                    onChange={(e) => setPreferences(prev => ({ ...prev, region: e.target.value }))}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select regional style...</option>
+                    {getRegionalOptions(preferences.country).map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+
+            {preferences.country && (
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Local Taste Preferences
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {getLocalTastes(preferences.country).map((taste) => (
+                    <button
+                      key={taste}
+                      onClick={() => handleArrayToggle(
+                        preferences.localTastes,
+                        taste,
+                        (arr) => setPreferences(prev => ({ ...prev, localTastes: arr }))
+                      )}
+                      className={`p-2 rounded-lg border-2 transition-all text-xs ${
+                        preferences.localTastes.includes(taste)
+                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      {taste}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {preferences.country && (
+              <div className="mt-4">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={preferences.traditionalFoods}
+                    onChange={(e) => setPreferences(prev => ({ ...prev, traditionalFoods: e.target.checked }))}
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    Prefer traditional/authentic recipes from this region
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
 
           {/* Dietary Restrictions */}
