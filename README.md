@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-8vw7h62my-aadhithyas-projects-adc44de8.vercel.app](https://fitness-8vw7h62my-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-9njvwc202-aadhithyas-projects-adc44de8.vercel.app](https://fitness-9njvwc202-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, and backend integration
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration, and administrator monitoring
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -53,8 +53,21 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🎤 Advanced Voice Features** - Speech recognition and text-to-speech for hands-free interaction
 - **🎯 Country-Based Food Preferences** - Comprehensive popup with country selection, regional cuisines, and local taste preferences
 - **🔗 Backend Integration** - Seamless server synchronization with offline-first approach
+- **👨‍💼 Administrator Monitoring** - Comprehensive admin dashboard for user activity tracking and system monitoring
 
-### 🔗 Backend Integration (NEW!)
+### 👨‍💼 Administrator Monitoring System (NEW!)
+- **🛡️ Admin Account:** `administrator@fitlife.com` / `admin123!@#` - Special administrator access
+- **📊 Real-time Dashboard:** Live monitoring of user activities, login records, and system statistics
+- **👥 User Activity Tracking:** Complete log of all user actions (login, logout, profile updates, food preferences)
+- **🔐 Login Monitoring:** Detailed login records with IP addresses, device types, browsers, and locations
+- **📈 System Statistics:** Total users, active users, login success/failure rates, session durations
+- **📋 Activity Logging:** Automatic tracking of all user interactions throughout the application
+- **💾 Data Export:** Export activity logs and login records for analysis
+- **🔍 Search & Filter:** Advanced filtering and search capabilities for monitoring data
+- **⚠️ Security Monitoring:** Failed login attempt tracking and suspicious activity detection
+- **🎨 Admin Interface:** Dedicated red-themed admin interface with role-based access control
+
+### 🔗 Backend Integration
 - **🌐 Offline-First Architecture** - Works perfectly without backend, syncs when available
 - **🔐 JWT Authentication** - Secure token-based authentication with refresh tokens
 - **📊 Data Synchronization** - Automatic sync of user preferences, progress, and nutrition data
@@ -157,9 +170,17 @@ npm start
 4. **Open your browser**
    Navigate to `http://localhost:3001`
 
-### Demo Account
+### 🔐 Authentication Accounts
+
+#### Demo Account (Regular User)
 - **Email:** demo@fitlife.com
 - **Password:** demo123
+- **Features:** Full access to all fitness features with pre-configured profile
+
+#### Administrator Account (System Monitoring)
+- **Email:** administrator@fitlife.com
+- **Password:** admin123!@#
+- **Features:** Complete admin dashboard with user activity monitoring, login tracking, and system analytics
 
 ### 🎤 Voice Assistant Usage
 1. **Enable Voice** - Click the volume icon in the AI assistant header
