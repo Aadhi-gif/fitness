@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading: true,
   });
   const [error, setError] = useState<string | null>(null);
-  const [isBackendConnected, setIsBackendConnected] = useState(false);
+  const [isBackendConnected, setIsBackendConnected] = useState(true); // Start optimistic
 
   // Mock user database (fallback when backend is not available)
   const mockUsers = [

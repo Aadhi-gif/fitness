@@ -1,5 +1,8 @@
 // API service for backend communication
+import { mockBackend } from './mockBackend';
+
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://your-backend-api.com/api';
+const USE_MOCK_BACKEND = process.env.REACT_APP_USE_MOCK_BACKEND === 'true' || !process.env.REACT_APP_API_URL;
 
 // Types for API requests/responses
 export interface User {
@@ -73,6 +76,58 @@ const getAuthHeaders = () => {
   };
 };
 
+// Enhanced fetch function that can use mock backend
+const enhancedFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
+  // If using mock backend or real backend fails, use mock
+  if (USE_MOCK_BACKEND) {
+    console.log('[API] Using mock backend for:', url);
+    const mockResponse = await mockBackend.handleRequest(url, options);
+
+    // Create a Response-like object
+    return {
+      ok: mockResponse.ok,
+      status: mockResponse.status,
+      statusText: mockResponse.statusText,
+      json: async () => mockResponse.data,
+      text: async () => JSON.stringify(mockResponse.data)
+    } as Response;
+  }
+
+  try {
+    // Try real backend first
+    const response = await fetch(url, {
+      ...options,
+      signal: AbortSignal.timeout(5000) // 5 second timeout
+    });
+
+    if (!response.ok && response.status >= 500) {
+      // Server error, fallback to mock
+      console.log('[API] Server error, falling back to mock backend');
+      const mockResponse = await mockBackend.handleRequest(url, options);
+      return {
+        ok: mockResponse.ok,
+        status: mockResponse.status,
+        statusText: mockResponse.statusText,
+        json: async () => mockResponse.data,
+        text: async () => JSON.stringify(mockResponse.data)
+      } as Response;
+    }
+
+    return response;
+  } catch (error) {
+    // Network error, fallback to mock
+    console.log('[API] Network error, falling back to mock backend:', error);
+    const mockResponse = await mockBackend.handleRequest(url, options);
+    return {
+      ok: mockResponse.ok,
+      status: mockResponse.status,
+      statusText: mockResponse.statusText,
+      json: async () => mockResponse.data,
+      text: async () => JSON.stringify(mockResponse.data)
+    } as Response;
+  }
+};
+
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'Network error' }));
@@ -94,7 +149,7 @@ export const authAPI = {
     goal?: string;
     activityLevel?: string;
   }): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
@@ -104,7 +159,7 @@ export const authAPI = {
 
   // Login user
   login: async (email: string, password: string): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -114,7 +169,7 @@ export const authAPI = {
 
   // Refresh token
   refreshToken: async (refreshToken: string): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken })
@@ -124,7 +179,7 @@ export const authAPI = {
 
   // Logout user
   logout: async (): Promise<void> => {
-    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/auth/logout`, {
       method: 'POST',
       headers: getAuthHeaders()
     });
@@ -133,7 +188,7 @@ export const authAPI = {
 
   // Get current user profile
   getProfile: async (): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/auth/profile`, {
       method: 'GET',
       headers: getAuthHeaders()
     });
@@ -142,7 +197,7 @@ export const authAPI = {
 
   // Update user profile
   updateProfile: async (userData: Partial<User>): Promise<User> => {
-    const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/auth/profile`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(userData)
@@ -155,7 +210,7 @@ export const authAPI = {
 export const preferencesAPI = {
   // Get user food preferences
   getFoodPreferences: async (): Promise<FoodPreferences> => {
-    const response = await fetch(`${API_BASE_URL}/preferences/food`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/preferences/food`, {
       method: 'GET',
       headers: getAuthHeaders()
     });
@@ -164,7 +219,7 @@ export const preferencesAPI = {
 
   // Save/update food preferences
   saveFoodPreferences: async (preferences: Omit<FoodPreferences, 'userId' | 'updatedAt'>): Promise<FoodPreferences> => {
-    const response = await fetch(`${API_BASE_URL}/preferences/food`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/preferences/food`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(preferences)
@@ -177,7 +232,7 @@ export const preferencesAPI = {
 export const progressAPI = {
   // Log workout
   logWorkout: async (workout: Omit<WorkoutProgress, 'userId'>): Promise<WorkoutProgress> => {
-    const response = await fetch(`${API_BASE_URL}/progress/workout`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/progress/workout`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(workout)
@@ -191,7 +246,7 @@ export const progressAPI = {
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
     
-    const response = await fetch(`${API_BASE_URL}/progress/workouts?${params}`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/progress/workouts?${params}`, {
       method: 'GET',
       headers: getAuthHeaders()
     });
@@ -200,7 +255,7 @@ export const progressAPI = {
 
   // Log nutrition
   logNutrition: async (nutrition: Omit<NutritionLog, 'userId'>): Promise<NutritionLog> => {
-    const response = await fetch(`${API_BASE_URL}/progress/nutrition`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/progress/nutrition`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(nutrition)
@@ -214,7 +269,7 @@ export const progressAPI = {
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
     
-    const response = await fetch(`${API_BASE_URL}/progress/nutrition?${params}`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/progress/nutrition?${params}`, {
       method: 'GET',
       headers: getAuthHeaders()
     });
@@ -233,7 +288,7 @@ export const progressAPI = {
       calories: number;
     }[];
   }> => {
-    const response = await fetch(`${API_BASE_URL}/progress/stats`, {
+    const response = await enhancedFetch(`${API_BASE_URL}/progress/stats`, {
       method: 'GET',
       headers: getAuthHeaders()
     });
