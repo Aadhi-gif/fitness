@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { LogIn, Mail, Lock, Eye, EyeOff, Loader } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import DemoAccountStatus from './DemoAccountStatus';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -91,6 +92,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
             </button>
           </div>
         </div>
+
+        {/* Demo Account Status */}
+        <DemoAccountStatus showInLogin={true} className="mb-4" />
 
         <button
           type="submit"

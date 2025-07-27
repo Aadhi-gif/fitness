@@ -5,6 +5,7 @@ import {
   UserCheck, UserX, Globe, Smartphone, Monitor, Server
 } from 'lucide-react';
 import BackendStatusPage from './BackendStatusPage';
+import DemoAccountStatus from './DemoAccountStatus';
 
 interface UserActivity {
   id: string;
@@ -336,6 +337,11 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Demo Account Monitoring - Always show in overview */}
+        {activeTab === 'overview' && (
+          <DemoAccountStatus className="mb-8" />
         )}
 
         {/* Activities Tab */}

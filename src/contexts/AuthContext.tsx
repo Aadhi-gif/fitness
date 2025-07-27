@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { User, AuthState, LoginCredentials, RegisterCredentials } from '../types/auth';
 import { authAPI, tokenManager, handleAPIError } from '../services/api';
 import { activityLogger } from '../services/activityLogger';
+import { demoAccountManager } from '../services/demoAccountManager';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<boolean>;
@@ -125,6 +126,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
     setAuthState(prev => ({ ...prev, isLoading: true }));
 
+    // Check if trying to use demo account
+    if (demoAccountManager.isDemoEmail(credentials.email)) {
+      const { allowed, reason } = demoAccountManager.canUseDemoAccount();
+
+      if (!allowed) {
+        setError(reason || 'Demo account is no longer available. Please create your own account.');
+        setAuthState(prev => ({ ...prev, isLoading: false }));
+        return false;
+      }
+    }
+
     try {
       // Try backend authentication first
       if (isBackendConnected || !localStorage.getItem('backend_unavailable')) {
@@ -145,6 +157,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             response.user.email,
             true
           );
+
+          // Record demo account usage if applicable
+          if (demoAccountManager.isDemoEmail(response.user.email)) {
+            demoAccountManager.recordDemoUsage();
+          }
 
           setIsBackendConnected(true);
           localStorage.removeItem('backend_unavailable');
@@ -205,6 +222,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         authenticatedUser.email,
         true
       );
+
+      // Record demo account usage if applicable
+      if (demoAccountManager.isDemoEmail(authenticatedUser.email)) {
+        demoAccountManager.recordDemoUsage();
+      }
 
       return true;
     } catch (error) {
@@ -286,6 +308,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           currentUser.name,
           currentUser.email
         );
+
+        // Expire demo account if applicable
+        if (demoAccountManager.isDemoEmail(currentUser.email)) {
+          demoAccountManager.expireDemoAccount();
+        }
       }
 
       tokenManager.clearTokens();

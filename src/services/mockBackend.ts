@@ -1,4 +1,6 @@
 // Mock backend server for development and testing
+import { demoAccountManager } from './demoAccountManager';
+
 interface MockResponse {
   data?: any;
   status: number;
@@ -121,8 +123,22 @@ class MockBackendServer {
       // Authentication endpoints
       if (pathname === '/auth/login' && method === 'POST') {
         const { email, password } = body;
+
+        // Check demo account availability
+        if (demoAccountManager.isDemoEmail(email)) {
+          const { allowed, reason } = demoAccountManager.canUseDemoAccount();
+          if (!allowed) {
+            return {
+              data: { message: reason || 'Demo account is no longer available' },
+              status: 403,
+              statusText: 'Forbidden',
+              ok: false
+            };
+          }
+        }
+
         const user = this.users.find(u => u.email === email && u.password === password);
-        
+
         if (!user) {
           return {
             data: { message: 'Invalid credentials' },
