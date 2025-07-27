@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-qnq9bhts8-aadhithyas-projects-adc44de8.vercel.app](https://fitness-qnq9bhts8-aadhithyas-projects-adc44de8.vercel.app)
+- **URL:** [https://fitness-bhh8huyy5-aadhithyas-projects-adc44de8.vercel.app](https://fitness-bhh8huyy5-aadhithyas-projects-adc44de8.vercel.app)
 - **Status:** ✅ Live and Fully Functional
-- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, and personalized food preferences
+- **Features:** All features including enhanced AI voice assistant, unique daily diets, exercise videos, and country-based personalized food preferences
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -51,17 +51,30 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🎥 Exercise Video Tutorials** - YouTube demonstrations for every exercise with form tips
 - **🤖 Comprehensive AI Assistant** - ChatGPT-level knowledge covering fitness, nutrition, health, travel, equipment, and more
 - **🎤 Advanced Voice Features** - Speech recognition and text-to-speech for hands-free interaction
-- **🎯 Personalized Food Preferences** - Comprehensive popup for dietary restrictions, budget, taste preferences, and allergies
+- **🎯 Country-Based Food Preferences** - Comprehensive popup with country selection, regional cuisines, and local taste preferences
 
-### 🎯 Food Preferences Customization (NEW!)
+### 🎯 Country-Based Food Preferences (NEW!)
+- **🌍 Country Selection** - India 🇮🇳, USA 🇺🇸, Italy 🇮🇹, Mexico 🇲🇽, Japan 🇯🇵, China 🇨🇳, Thailand 🇹🇭, France 🇫🇷, and 8 more countries
+- **🏛️ Regional Styles** - North Indian, South Indian, Bengali, Southern USA, Tex-Mex, Northern Italian, Sicilian, Kansai, Sichuan, etc.
+- **👅 Local Taste Preferences** - Spicy & Hot, Sweet & Savory, Fresh & Light, Rich & Creamy, Bold & Aromatic, Traditional Authentic
+- **🍽️ Authentic Meal Database** - Country-specific dishes like Masala Dosa, Biryani, Carbonara, Tacos, Sushi, Pad Thai
 - **💰 Budget Ranges** - Budget-Friendly ($5-10), Moderate ($10-20), Premium ($20-35), Luxury ($35+)
 - **🥗 Dietary Restrictions** - Vegetarian, Vegan, Pescatarian, Keto, Paleo, Mediterranean, Low-Carb, Gluten-Free, etc.
-- **🌍 Cuisine Preferences** - Mediterranean, Asian, Mexican, Italian, Indian, American, Middle Eastern, French, Thai, Japanese
 - **⏰ Cooking Time** - Quick (15-30 min), Moderate (30-45 min), Extended (45-60 min), Elaborate (60+ min)
 - **🌶️ Spice Levels** - Mild, Medium, Hot, Very Hot with visual indicators
 - **⚠️ Allergies & Restrictions** - Nuts, Shellfish, Fish, Eggs, Dairy, Soy, Gluten, Sesame
 - **🥩 Protein Preferences** - Chicken, Fish, Beef, Pork, Turkey, Tofu, Legumes, Eggs
-- **💾 Persistent Storage** - Preferences saved locally and applied to all meal recommendations
+- **🏠 Traditional vs Fusion** - Toggle between authentic traditional recipes and modern fusion meals
+- **💾 Persistent Storage** - All preferences saved locally and applied to meal recommendations
+
+### 🇮🇳 Indian Cuisine Example
+When you select **India** as your country, you get authentic Indian meals:
+- **Breakfast:** Masala Dosa, Poha, Upma, Paratha with Curd, Idli Sambar
+- **Lunch:** Dal Rice Thali, Biryani, Chole Bhature, Rajma Chawal, Sambar Rice
+- **Dinner:** Paneer Butter Masala, Chicken Curry, Fish Curry, Vegetable Korma, Mutton Curry
+- **Snacks:** Samosa with Chutney, Bhel Puri, Masala Chai with Biscuits, Fruit Chaat
+- **Regional Options:** North Indian, South Indian, Bengali, Gujarati, Punjabi, Maharashtrian, Rajasthani, Kerala
+- **Local Tastes:** Spicy & Hot, Sweet & Savory, Tangy & Sour, Rich & Creamy, Aromatic Spices, Street Food Style
 
 ### 🎨 Design Features
 - **Responsive Design** - Mobile-first approach with Tailwind CSS
