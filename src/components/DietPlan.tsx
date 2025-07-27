@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Utensils, Coffee, Sun, Moon, Apple, Settings, DollarSign, Clock } from 'lucide-react';
 import FoodPreferencesModal from './FoodPreferencesModal';
+import BackendStatus from './BackendStatus';
+import useBackendPreferences from '../hooks/useBackendPreferences';
 
 interface Meal {
   name: string;
@@ -39,43 +41,31 @@ interface DietPlanProps {
 const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
   const [selectedDay, setSelectedDay] = useState(0);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
-  const [foodPreferences, setFoodPreferences] = useState<FoodPreferences>({
-    dietaryRestrictions: [],
-    cuisinePreferences: [],
-    budgetRange: 'moderate',
-    cookingTime: '30-45',
-    spiceLevel: 'medium',
-    mealComplexity: 'moderate',
-    allergies: [],
-    dislikedFoods: [],
-    preferredProteins: [],
-    location: 'global',
-    country: '',
-    region: '',
-    localTastes: [],
-    traditionalFoods: true
-  });
-  const [hasSetPreferences, setHasSetPreferences] = useState(false);
+
+  // Use backend preferences hook
+  const {
+    preferences: foodPreferences,
+    isLoading: preferencesLoading,
+    error: preferencesError,
+    savePreferences,
+    isBackendConnected
+  } = useBackendPreferences();
+
+  const hasSetPreferences = foodPreferences.country !== '' || foodPreferences.dietaryRestrictions.length > 0;
 
   // Show preferences modal on first visit
   useEffect(() => {
-    const savedPreferences = localStorage.getItem('foodPreferences');
-    if (savedPreferences) {
-      setFoodPreferences(JSON.parse(savedPreferences));
-      setHasSetPreferences(true);
-    } else {
+    if (!preferencesLoading && !hasSetPreferences) {
       // Show modal after a short delay for better UX
       const timer = setTimeout(() => {
         setShowPreferencesModal(true);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [preferencesLoading, hasSetPreferences]);
 
-  const handleSavePreferences = (preferences: FoodPreferences) => {
-    setFoodPreferences(preferences);
-    setHasSetPreferences(true);
-    localStorage.setItem('foodPreferences', JSON.stringify(preferences));
+  const handleSavePreferences = async (preferences: FoodPreferences) => {
+    await savePreferences(preferences);
   };
 
   const getBudgetIcon = (budgetRange: string) => {
@@ -617,13 +607,16 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
             </div>
           </div>
 
-          <button
-            onClick={() => setShowPreferencesModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all"
-          >
-            <Settings className="w-4 h-4" />
-            <span className="hidden sm:inline">Food Preferences</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <BackendStatus />
+            <button
+              onClick={() => setShowPreferencesModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Food Preferences</span>
+            </button>
+          </div>
         </div>
 
         {!hasSetPreferences && (

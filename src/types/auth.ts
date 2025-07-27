@@ -2,7 +2,13 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  createdAt: Date;
+  age?: number;
+  weight?: number;
+  height?: number;
+  goal?: 'lose' | 'maintain' | 'gain';
+  activityLevel?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthState {
@@ -21,4 +27,34 @@ export interface RegisterCredentials {
   email: string;
   password: string;
   confirmPassword: string;
+  age?: number;
+  weight?: number;
+  height?: number;
+  goal?: 'lose' | 'maintain' | 'gain';
+  activityLevel?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
+  refreshToken: string;
+}
+
+export interface FoodPreferences {
+  userId: string;
+  dietaryRestrictions: string[];
+  cuisinePreferences: string[];
+  budgetRange: string;
+  cookingTime: string;
+  spiceLevel: string;
+  mealComplexity: string;
+  allergies: string[];
+  dislikedFoods: string[];
+  preferredProteins: string[];
+  location: string;
+  country: string;
+  region: string;
+  localTastes: string[];
+  traditionalFoods: boolean;
+  updatedAt: string;
 }

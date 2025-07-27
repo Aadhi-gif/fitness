@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Heart, LogIn, UserPlus, User, LogOut, Settings } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import AuthModal from './AuthModal';
+import BackendStatus from './BackendStatus';
 
 const Header: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -42,6 +43,7 @@ const Header: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-4">
+              {isAuthenticated && <BackendStatus />}
               {isAuthenticated ? (
                 <div className="relative">
                   <button
