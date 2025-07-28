@@ -127,8 +127,98 @@ const Assistant: React.FC<AssistantProps> = ({ userProfile, targetCalories }) =>
     }
   };
 
+  // Enhanced dynamic response generation
+  const generateDynamicResponse = (message: string, profile: UserProfile, calories: number) => {
+    // General conversation and questions
+    if (message.includes('what') || message.includes('how') || message.includes('why') || message.includes('when') || message.includes('where')) {
+
+      // Fitness-related questions
+      if (message.includes('best time') && message.includes('workout')) {
+        return {
+          content: `The best workout time depends on your schedule and goals! 🕐\n\n🌅 **Morning (6-8 AM):**\n• Higher testosterone levels\n• Better consistency (fewer distractions)\n• Improved mood for the day\n• Fasted cardio benefits\n\n🌆 **Evening (4-6 PM):**\n• Peak body temperature\n• Better strength performance\n• More time for warm-up\n• Social workout opportunities\n\n💡 **Your Goal (${profile?.goal}):** ${profile?.goal === 'lose' ? 'Morning fasted cardio + evening strength' : profile?.goal === 'gain' ? 'Evening when you have most energy' : 'Consistency matters more than timing'}\n\nWhat matters most is finding a time you can stick to consistently!`,
+          category: 'info' as const
+        };
+      }
+
+      if (message.includes('how much') && (message.includes('protein') || message.includes('water'))) {
+        if (message.includes('protein')) {
+          const proteinNeeds = profile?.goal === 'gain' ? '1.6-2.2g' : '1.2-1.6g';
+          const dailyProtein = Math.round((profile?.weight || 70) * (profile?.goal === 'gain' ? 2.0 : 1.4));
+          return {
+            content: `Your protein needs for ${profile?.goal || 'maintenance'}: 🥩\n\n🎯 **Target:** ${proteinNeeds}/kg body weight\n📊 **Your Daily Goal:** ~${dailyProtein}g protein\n\n🍽️ **Meal Distribution:**\n• Breakfast: ${Math.round(dailyProtein * 0.25)}g\n• Lunch: ${Math.round(dailyProtein * 0.35)}g\n• Dinner: ${Math.round(dailyProtein * 0.30)}g\n• Snacks: ${Math.round(dailyProtein * 0.10)}g\n\n🥚 **Quality Sources:**\n• Lean meats, fish, eggs\n• Greek yogurt, cottage cheese\n• Legumes, quinoa, tofu\n• Protein powder (if needed)\n\n💡 Aim for 20-30g per meal for optimal muscle protein synthesis!`,
+            category: 'success' as const
+          };
+        }
+        if (message.includes('water')) {
+          const waterNeeds = Math.round((profile?.weight || 70) * 35);
+          return {
+            content: `Your hydration needs: 💧\n\n🎯 **Daily Target:** ${waterNeeds}ml (${Math.round(waterNeeds/250)} glasses)\n\n⏰ **Timing Strategy:**\n• Wake up: 500ml (rehydrate overnight losses)\n• Pre-workout: 250ml (30 min before)\n• During workout: 150-250ml every 15-20 min\n• Post-workout: 150% of fluid lost\n• With meals: 250ml each\n\n🚰 **Hydration Tips:**\n• Urine should be pale yellow\n• Increase in hot weather/high altitude\n• Add electrolytes for workouts >1 hour\n• Herbal teas count toward intake\n\n⚠️ Don't wait until you're thirsty - that's already mild dehydration!`,
+            category: 'info' as const
+          };
+        }
+      }
+
+      if (message.includes('what should i eat') || message.includes('meal ideas')) {
+        const mealSuggestions = profile?.goal === 'lose' ?
+          'lean proteins, vegetables, complex carbs in smaller portions' :
+          profile?.goal === 'gain' ?
+          'calorie-dense foods, healthy fats, protein-rich meals' :
+          'balanced macronutrients with variety';
+
+        return {
+          content: `Meal ideas for your ${profile?.goal || 'fitness'} goal: 🍽️\n\n🥗 **Focus on:** ${mealSuggestions}\n\n🌅 **Breakfast Ideas:**\n• Greek yogurt with berries and granola\n• Oatmeal with banana and almond butter\n• Scrambled eggs with spinach and avocado\n\n🌞 **Lunch Options:**\n• Grilled chicken salad with quinoa\n• Lentil soup with whole grain bread\n• Salmon bowl with brown rice and vegetables\n\n🌙 **Dinner Suggestions:**\n• Lean protein + roasted vegetables + sweet potato\n• Stir-fry with tofu/chicken and brown rice\n• Grilled fish with quinoa and steamed broccoli\n\n🍎 **Smart Snacks:**\n• Apple with almond butter\n• Greek yogurt with nuts\n• Hummus with vegetable sticks\n\nWant specific recipes for any of these?`,
+          category: 'success' as const
+        };
+      }
+
+      if (message.includes('how to') && message.includes('lose weight')) {
+        return {
+          content: `Evidence-based weight loss strategy: 📉\n\n🎯 **Caloric Deficit:** 300-500 calories below maintenance\n📊 **Your Target:** ${calories} calories/day\n\n🏗️ **The Foundation:**\n• 80% nutrition, 20% exercise\n• Sustainable habits over quick fixes\n• 1-2 lbs per week is optimal\n\n💪 **Exercise Protocol:**\n• Strength training: 3x/week (preserve muscle)\n• Cardio: 150 min moderate or 75 min vigorous\n• Daily walks: 8,000-10,000 steps\n\n🍽️ **Nutrition Priorities:**\n1. Protein: 1.2-1.6g/kg body weight\n2. Fiber: 25-35g daily\n3. Whole foods over processed\n4. Meal timing consistency\n\n📈 **Track Progress:**\n• Weekly weigh-ins (same time/conditions)\n• Body measurements\n• Progress photos\n• How clothes fit\n\nRemember: It's a marathon, not a sprint! 🏃‍♀️`,
+          category: 'success' as const
+        };
+      }
+    }
+
+    // Motivational and emotional support
+    if (message.includes('tired') || message.includes('exhausted') || message.includes('no energy')) {
+      return {
+        content: `I understand you're feeling tired. Let's address this systematically: 😴\n\n🔍 **Quick Assessment:**\n• Sleep: Getting 7-9 hours nightly?\n• Nutrition: Eating regularly and balanced meals?\n• Hydration: Drinking enough water?\n• Stress: Managing work/life pressures?\n\n⚡ **Energy Boosters:**\n• 10-minute walk in sunlight\n• Deep breathing exercises (4-7-8 technique)\n• Protein-rich snack if hungry\n• Power nap (20 min max)\n\n🩺 **When to Be Concerned:**\n• Persistent fatigue >2 weeks\n• Fatigue with other symptoms\n• Sudden onset without clear cause\n\n💡 **Today's Action Plan:**\n1. Drink a glass of water now\n2. Take 5 deep breaths\n3. Consider a light walk\n4. Plan an earlier bedtime\n\nYour body might be telling you something important. Listen to it! 💙`,
+        category: 'warning' as const
+      };
+    }
+
+    if (message.includes('motivated') || message.includes('motivation') || message.includes('give up')) {
+      const encouragement = [
+        "Every expert was once a beginner. You're building something amazing! 💪",
+        "Progress isn't always linear. Trust the process and keep showing up! 🌟",
+        "Your future self will thank you for not giving up today! 🚀",
+        "Small consistent actions lead to remarkable results! ✨"
+      ];
+      const randomEncouragement = encouragement[Math.floor(Math.random() * encouragement.length)];
+
+      return {
+        content: `${randomEncouragement}\n\n🎯 **Motivation Strategies:**\n• Set micro-goals (today's win)\n• Track non-scale victories\n• Find your 'why' (health, family, confidence)\n• Celebrate small wins\n• Connect with supportive people\n\n🧠 **Mindset Shifts:**\n• "I get to" vs "I have to"\n• Focus on how you feel, not just how you look\n• Progress over perfection\n• Consistency over intensity\n\n💡 **Right Now Action:**\n• Name one thing you're proud of this week\n• Set one small goal for tomorrow\n• Remember why you started\n\n${profile?.name}, you've got this! Every day you choose health is a victory! 🏆`,
+        category: 'success' as const
+      };
+    }
+
+    // Specific health and fitness topics
+    if (message.includes('supplement') || message.includes('vitamins')) {
+      return {
+        content: `Supplement guidance (always consult healthcare providers first): 💊\n\n🥇 **Evidence-Based Essentials:**\n• **Vitamin D3:** 1000-2000 IU (especially if limited sun)\n• **Omega-3:** 1-2g EPA/DHA daily\n• **Magnesium:** 200-400mg (glycinate form)\n• **Creatine:** 3-5g daily (for strength training)\n\n🎯 **Goal-Specific:**\n${profile?.goal === 'gain' ? '• Protein powder: 20-30g post-workout\n• Creatine monohydrate: 5g daily' : profile?.goal === 'lose' ? '• Caffeine: 100-200mg pre-workout\n• Fiber supplement if diet lacks vegetables' : '• Multivitamin for insurance\n• Probiotics for gut health'}\n\n⚠️ **Red Flags to Avoid:**\n• "Miracle" fat burners\n• Mega-dose vitamins\n• Unregulated products\n• Anything promising overnight results\n\n🍎 **Food First Approach:**\n• Supplements supplement, don't replace food\n• Focus on nutrient-dense whole foods\n• Test vitamin D and B12 levels\n\nWhat specific supplement are you considering?`,
+        category: 'info' as const
+      };
+    }
+
+    return null; // Return null if no specific dynamic response found
+  };
+
   const getAssistantResponse = (userMessage: string): { content: string; category: 'success' | 'warning' | 'info' } => {
     const message = userMessage.toLowerCase();
+
+    // Enhanced conversational AI with context awareness
+    const responses = generateDynamicResponse(message, userProfile, targetCalories);
+    if (responses) return responses;
 
     // Nutrition and Diet Knowledge
     if (message.includes('calorie') || message.includes('diet') || message.includes('food') || message.includes('nutrition')) {

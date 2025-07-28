@@ -101,7 +101,7 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
         lunch: [
           { name: "Dal Rice Thali", description: "Complete meal with lentil curry, basmati rice, vegetables, roti, and pickle" },
           { name: "Biryani", description: "Fragrant basmati rice with spiced meat/vegetables, raita, and boiled egg" },
-          { name: "Chole Bhature", description: "Spiced chickpea curry with deep-fried bread and onion salad" },
+          { name: "Chole with Roti", description: "Spiced chickpea curry with whole wheat roti and onion salad" },
           { name: "Rajma Chawal", description: "Kidney bean curry with steamed rice and fresh salad" },
           { name: "Sambar Rice", description: "South Indian lentil curry with rice, vegetables, and papadum" }
         ],
@@ -113,10 +113,10 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
           { name: "Mutton Curry", description: "Slow-cooked spiced mutton with basmati rice and raita" }
         ],
         snack: [
-          { name: "Samosa with Chutney", description: "Crispy pastry with spiced potato filling and mint-coriander chutney" },
-          { name: "Bhel Puri", description: "Mumbai street food with puffed rice, vegetables, and tangy chutneys" },
-          { name: "Masala Chai with Biscuits", description: "Spiced tea with ginger and cardamom, served with digestive biscuits" },
-          { name: "Fruit Chaat", description: "Mixed seasonal fruits with chaat masala, lemon, and mint" }
+          { name: "Roasted Chickpeas", description: "Protein-rich roasted chana with turmeric, cumin, and black pepper" },
+          { name: "Mixed Nuts & Seeds", description: "Almonds, walnuts, pumpkin seeds with a pinch of rock salt" },
+          { name: "Fruit Chaat", description: "Mixed seasonal fruits with chaat masala, lemon, and mint" },
+          { name: "Greek Yogurt with Berries", description: "High-protein yogurt with fresh berries and a drizzle of honey" }
         ]
       },
       usa: {
@@ -136,16 +136,16 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
         ],
         dinner: [
           { name: "Grilled Steak", description: "Ribeye steak with mashed potatoes, green beans, and dinner roll" },
-          { name: "Fried Chicken", description: "Crispy fried chicken with mac and cheese and cornbread" },
+          { name: "Grilled Chicken Bowl", description: "Grilled chicken breast with quinoa, roasted vegetables, and avocado" },
           { name: "Salmon Fillet", description: "Grilled salmon with quinoa pilaf and roasted asparagus" },
           { name: "Meatloaf", description: "Classic meatloaf with mashed potatoes, gravy, and steamed broccoli" },
           { name: "Shrimp and Grits", description: "Southern-style shrimp over creamy grits with andouille sausage" }
         ],
         snack: [
-          { name: "Trail Mix", description: "Mixed nuts, dried fruits, and dark chocolate chips" },
-          { name: "Apple with Peanut Butter", description: "Fresh apple slices with natural peanut butter" },
+          { name: "Trail Mix", description: "Mixed nuts, seeds, and dried fruits for sustained energy" },
+          { name: "Apple with Almond Butter", description: "Fresh apple slices with natural almond butter" },
           { name: "Protein Smoothie", description: "Banana, berries, protein powder, and almond milk" },
-          { name: "Cheese and Crackers", description: "Assorted cheeses with whole grain crackers and grapes" }
+          { name: "Hummus with Vegetables", description: "Homemade hummus with carrot sticks, cucumber, and bell peppers" }
         ]
       },
       italy: {
@@ -171,10 +171,10 @@ const DietPlan: React.FC<DietPlanProps> = ({ targetCalories, goal }) => {
           { name: "Veal Piccata", description: "Pan-seared veal with lemon, capers, and angel hair pasta" }
         ],
         snack: [
-          { name: "Gelato", description: "Artisanal Italian ice cream with seasonal flavors" },
-          { name: "Antipasto Plate", description: "Cured meats, cheeses, olives, and marinated vegetables" },
-          { name: "Espresso with Biscotti", description: "Strong Italian coffee with almond biscotti" },
-          { name: "Bruschetta Trio", description: "Three varieties of bruschetta with different toppings" }
+          { name: "Fresh Mozzarella with Tomatoes", description: "Buffalo mozzarella with cherry tomatoes and fresh basil" },
+          { name: "Antipasto Plate", description: "Lean prosciutto, olives, and marinated vegetables" },
+          { name: "Espresso with Almonds", description: "Strong Italian coffee with raw almonds" },
+          { name: "Bruschetta with Tomatoes", description: "Whole grain bread with fresh tomatoes, basil, and olive oil" }
         ]
       }
     };
