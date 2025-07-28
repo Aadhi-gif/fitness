@@ -10,9 +10,9 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 ## 🌐 Live Deployments
 
 ### 🚀 Vercel (Primary)
-- **URL:** [https://fitness-incmwaphz-aadhithyas-projects-adc44de8.vercel.app](https://fitness-incmwaphz-aadhithyas-projects-adc44de8.vercel.app)
-- **Status:** ✅ Live with Unified Auth & Fitness-Themed Design
-- **Features:** All features including unified authentication, creative fitness-themed backgrounds, enhanced AI voice assistant, unique daily diets, exercise videos, country-based food preferences, backend integration with intelligent fallback, administrator monitoring, backend status monitoring, and first-time demo account policy
+- **URL:** [https://fitness-37ent5yt6-aadhithyas-projects-adc44de8.vercel.app](https://fitness-37ent5yt6-aadhithyas-projects-adc44de8.vercel.app)
+- **Status:** ✅ Live with Diet-Focused Foods & Enhanced AI
+- **Features:** All features including unified authentication, creative fitness-themed backgrounds, diet-appropriate food recommendations, intelligent AI assistant with dynamic responses, unique daily diets, exercise videos, country-based food preferences, backend integration with intelligent fallback, administrator monitoring, backend status monitoring, and first-time demo account policy
 
 ### 🐙 GitHub Pages (Secondary)
 - **URL:** [https://aadhi-gif.github.io/fitness/](https://aadhi-gif.github.io/fitness/)
@@ -102,6 +102,28 @@ A comprehensive React-based fitness and nutrition application with **AI voice as
 - **🔧 Streamlined UX:** Removed clutter by consolidating all auth into single beautiful interface
 - **💫 Enhanced Aesthetics:** Modern UI patterns with fitness industry-standard color schemes
 - **🎪 Interactive Elements:** Background rotation, particle animations, and smooth state transitions
+
+### 🥗 Diet-Focused Food Recommendations (NEW!)
+- **🚫 Removed Unhealthy Options:** Eliminated snacks like samosa, bhel puri, gelato, fried chicken from recommendations
+- **✅ Diet-Appropriate Alternatives:** Replaced with roasted chickpeas, mixed nuts, Greek yogurt, hummus with vegetables
+- **🇮🇳 Healthy Indian Options:** Roasted chickpeas, mixed nuts & seeds, fruit chaat, Greek yogurt with berries
+- **🇺🇸 Clean USA Choices:** Trail mix, apple with almond butter, protein smoothie, hummus with vegetables
+- **🇮🇹 Lean Italian Selections:** Fresh mozzarella with tomatoes, lean prosciutto, whole grain bruschetta
+- **🍽️ Improved Meal Options:** Chole with roti instead of bhature, grilled chicken bowl instead of fried chicken
+- **🎯 Fitness-Focused:** All recommendations support weight loss, muscle gain, or maintenance goals
+- **📊 Nutritionally Balanced:** Emphasis on protein, fiber, healthy fats, and complex carbohydrates
+
+### 🤖 Enhanced AI Assistant with Dynamic Responses (NEW!)
+- **🧠 Intelligent Response System:** Dynamic generateDynamicResponse function for contextual answers
+- **👤 Personalized Advice:** Responses based on user profile (goal, activity level, weight) for targeted guidance
+- **💪 Comprehensive Topics:** Workout planning, nutrition advice, protein needs, hydration, weight loss strategies
+- **💖 Emotional Support:** Motivational responses for tiredness, lack of motivation, and emotional challenges
+- **🗣️ Natural Conversation:** Greetings, thank you responses, weather adaptations, and time management advice
+- **💊 Evidence-Based Guidance:** Supplement recommendations and goal-specific nutritional advice
+- **🎲 Randomized Responses:** Multiple response variations to avoid repetitive answers and maintain engagement
+- **📚 Educational Content:** Detailed explanations with actionable tips and scientific backing
+- **⚡ Context Awareness:** Understands user intent and provides relevant, helpful information
+- **🎯 Goal-Specific Advice:** Tailored recommendations for weight loss, muscle gain, or maintenance goals
 
 ### 🔗 Backend Integration (FIXED!)
 - **🌐 Offline-First Architecture** - Works perfectly without backend, syncs when available
