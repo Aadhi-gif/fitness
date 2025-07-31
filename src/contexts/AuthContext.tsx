@@ -10,6 +10,7 @@ interface AuthContextType extends AuthState {
   logout: () => Promise<void>;
   updateProfile: (userData: Partial<User>) => Promise<boolean>;
   refreshUserProfile: () => Promise<void>;
+  resetPassword: (email: string) => Promise<boolean>;
   error: string | null;
   clearError: () => void;
   isBackendConnected: boolean;
@@ -390,6 +391,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const resetPassword = async (email: string): Promise<boolean> => {
+    setError(null);
+
+    try {
+      // Check if user exists
+      const userExists = mockUsers.find(u => u.email === email);
+      if (!userExists) {
+        setError('No account found with this email address');
+        return false;
+      }
+
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // In a real app, you would:
+      // 1. Generate a secure reset token
+      // 2. Store it in the database with expiration
+      // 3. Send email with reset link
+      // 4. Handle the reset on a separate page
+
+      console.log('Password reset email sent to:', email);
+
+      // For demo purposes, we'll just log the reset token
+      const resetToken = Math.random().toString(36).substring(2, 15);
+      console.log('Reset token (for demo):', resetToken);
+
+      return true;
+    } catch (error) {
+      console.error('Password reset error:', error);
+      setError('Failed to send reset email. Please try again.');
+      return false;
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -401,6 +436,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     updateProfile,
     refreshUserProfile,
+    resetPassword,
     error,
     clearError,
     isBackendConnected,

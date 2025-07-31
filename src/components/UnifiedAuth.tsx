@@ -7,10 +7,13 @@ import { useAuth } from '../contexts/AuthContext';
 import DemoAccountStatus from './DemoAccountStatus';
 
 const UnifiedAuth: React.FC = () => {
-  const { login, register, error, isLoading } = useAuth();
+  const { login, register, resetPassword, error, isLoading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [currentBg, setCurrentBg] = useState(0);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetEmailSent, setResetEmailSent] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -62,27 +65,106 @@ const UnifiedAuth: React.FC = () => {
     }));
   };
 
+  const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+      errors.push('Password must be at least 8 characters long');
+    }
+    if (!/(?=.*[a-z])/.test(password)) {
+      errors.push('Password must contain at least one lowercase letter');
+    }
+    if (!/(?=.*[A-Z])/.test(password)) {
+      errors.push('Password must contain at least one uppercase letter');
+    }
+    if (!/(?=.*\d)/.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+
+    return { isValid: errors.length === 0, errors };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (isLogin) {
-      await login({ email: formData.email, password: formData.password });
+      const success = await login({ email: formData.email, password: formData.password });
+      if (success) {
+        // Login successful, user will be redirected by App.tsx
+        console.log('Login successful');
+      }
     } else {
+      // Registration validation
+      if (!formData.name.trim()) {
+        alert('Please enter your full name');
+        return;
+      }
+
+      if (!formData.email.trim()) {
+        alert('Please enter your email address');
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        alert('Please enter a valid email address');
+        return;
+      }
+
+      const passwordValidation = validatePassword(formData.password);
+      if (!passwordValidation.isValid) {
+        alert('Password requirements:\n' + passwordValidation.errors.join('\n'));
+        return;
+      }
+
       if (formData.password !== formData.confirmPassword) {
         alert('Passwords do not match');
         return;
       }
-      await register({
+
+      const success = await register({
         name: formData.name,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        confirmPassword: formData.confirmPassword
       });
+
+      if (success) {
+        // Registration successful, user will be redirected by App.tsx
+        console.log('Registration successful');
+      }
     }
   };
 
   const switchMode = () => {
     setIsLogin(!isLogin);
     setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+    setShowForgotPassword(false);
+    setResetEmailSent(false);
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!resetEmail.trim()) {
+      alert('Please enter your email address');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    const success = await resetPassword(resetEmail);
+    if (success) {
+      setResetEmailSent(true);
+    }
+  };
+
+  const closeForgotPassword = () => {
+    setShowForgotPassword(false);
+    setResetEmail('');
+    setResetEmailSent(false);
   };
 
   return (
@@ -286,7 +368,44 @@ const UnifiedAuth: React.FC = () => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
+                  {/* Forgot Password Link (Login Only) */}
+                  {isLogin && (
+                    <div className="text-right">
+                      <button
+                        type="button"
+                        onClick={() => setShowForgotPassword(true)}
+                        className="text-sm text-red-500 hover:text-red-600 transition-colors"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
+                  )}
                 </div>
+
+                {/* Password Strength Indicator (Register Only) */}
+                {!isLogin && formData.password && (
+                  <div className="space-y-2">
+                    <div className="text-sm text-gray-600">Password Requirements:</div>
+                    <div className="space-y-1">
+                      <div className={`text-xs flex items-center gap-2 ${formData.password.length >= 8 ? 'text-green-600' : 'text-gray-400'}`}>
+                        <div className={`w-2 h-2 rounded-full ${formData.password.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`} />
+                        At least 8 characters
+                      </div>
+                      <div className={`text-xs flex items-center gap-2 ${/(?=.*[a-z])/.test(formData.password) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <div className={`w-2 h-2 rounded-full ${/(?=.*[a-z])/.test(formData.password) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                        One lowercase letter
+                      </div>
+                      <div className={`text-xs flex items-center gap-2 ${/(?=.*[A-Z])/.test(formData.password) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <div className={`w-2 h-2 rounded-full ${/(?=.*[A-Z])/.test(formData.password) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                        One uppercase letter
+                      </div>
+                      <div className={`text-xs flex items-center gap-2 ${/(?=.*\d)/.test(formData.password) ? 'text-green-600' : 'text-gray-400'}`}>
+                        <div className={`w-2 h-2 rounded-full ${/(?=.*\d)/.test(formData.password) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                        One number
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Confirm Password (Register Only) */}
                 {!isLogin && (
@@ -301,11 +420,18 @@ const UnifiedAuth: React.FC = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all bg-white/80"
+                        className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all bg-white/80 ${
+                          formData.confirmPassword && formData.password !== formData.confirmPassword
+                            ? 'border-red-300'
+                            : 'border-gray-300'
+                        }`}
                         placeholder="Confirm your password"
                         required={!isLogin}
                       />
                     </div>
+                    {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                      <p className="text-red-500 text-sm mt-1">Passwords do not match</p>
+                    )}
                   </div>
                 )}
 
@@ -342,6 +468,86 @@ const UnifiedAuth: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <div className="text-center mb-6">
+              <div className="p-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl inline-block mb-4">
+                <Mail className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">Reset Password</h3>
+              <p className="text-gray-600">
+                {resetEmailSent
+                  ? "Check your email for reset instructions"
+                  : "Enter your email to receive reset instructions"
+                }
+              </p>
+            </div>
+
+            {error && showForgotPassword && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4">
+                <p className="text-sm">{error}</p>
+              </div>
+            )}
+
+            {!resetEmailSent ? (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                      placeholder="Enter your email address"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={closeForgotPassword}
+                    className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all"
+                  >
+                    Send Reset Link
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+                  <p className="text-green-700 text-sm">
+                    Password reset instructions have been sent to <strong>{resetEmail}</strong>
+                  </p>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  Didn't receive the email? Check your spam folder or try again in a few minutes.
+                </p>
+                <button
+                  onClick={closeForgotPassword}
+                  className="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl hover:from-red-600 hover:to-orange-600 transition-all"
+                >
+                  Back to Login
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
