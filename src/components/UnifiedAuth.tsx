@@ -22,10 +22,10 @@ const UnifiedAuth: React.FC = () => {
     confirmPassword: ''
   });
 
-  // Elite athlete-inspired background images and motivational content
+  // Elite male athlete-inspired background images and motivational content
   const backgroundImages = [
     {
-      url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      url: 'https://images.unsplash.com/photo-1583500178690-f7d24c6d17b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       title: 'DOMINATE THE IRON',
       description: 'Forge strength like champions',
       icon: Dumbbell,
@@ -33,7 +33,7 @@ const UnifiedAuth: React.FC = () => {
       quote: '"Champions are made in the gym when nobody is watching"'
     },
     {
-      url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2020&q=80',
+      url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       title: 'CARDIO WARRIOR',
       description: 'Unleash unstoppable endurance',
       icon: Lightning,
@@ -41,7 +41,7 @@ const UnifiedAuth: React.FC = () => {
       quote: '"Pain is temporary, quitting lasts forever"'
     },
     {
-      url: 'https://images.unsplash.com/photo-1549476464-37392f717541?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      url: 'https://images.unsplash.com/photo-1594381898411-846e7d193883?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       title: 'COMBAT READY',
       description: 'Train like a gladiator',
       icon: Sword,
@@ -49,7 +49,7 @@ const UnifiedAuth: React.FC = () => {
       quote: '"I fear not the man who has practiced 10,000 kicks once"'
     },
     {
-      url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      url: 'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       title: 'OUTDOOR BEAST',
       description: 'Conquer nature\'s challenges',
       icon: Shield,
@@ -57,7 +57,7 @@ const UnifiedAuth: React.FC = () => {
       quote: '"The only easy day was yesterday"'
     },
     {
-      url: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      url: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
       title: 'FUEL THE MACHINE',
       description: 'Elite nutrition protocols',
       icon: Flame,

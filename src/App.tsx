@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useAuth } from './contexts/AuthContext';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
-import UserProfileForm from './components/UserProfileForm';
-import CalorieCalculator from './components/CalorieCalculator';
-import DietPlan from './components/DietPlan';
-import ExerciseRoutines from './components/ExerciseRoutines';
-import Assistant from './components/Assistant';
 import UnifiedAuth from './components/UnifiedAuth';
 import AdminDashboard from './components/AdminDashboard';
+
+// Import page components
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import Nutrition from './pages/Nutrition';
+import Exercise from './pages/Exercise';
+import AssistantPage from './pages/Assistant';
 
 interface UserProfile {
   name: string;
@@ -23,43 +26,9 @@ interface UserProfile {
 
 function App() {
   const { isAuthenticated, user } = useAuth();
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   // Check if user is admin
   const isAdmin = user?.role === 'admin';
-
-  const calculateTargetCalories = (profile: UserProfile): number => {
-    // BMR calculation using Mifflin-St Jeor Equation
-    let bmr: number;
-    if (profile.gender === 'male') {
-      bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + 5;
-    } else {
-      bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age - 161;
-    }
-
-    // Activity multiplier
-    const activityMultipliers = {
-      sedentary: 1.2,
-      light: 1.375,
-      moderate: 1.55,
-      active: 1.725,
-      'very-active': 1.9
-    };
-
-    const tdee = bmr * activityMultipliers[profile.activityLevel];
-
-    // Goal adjustment
-    switch (profile.goal) {
-      case 'lose':
-        return Math.round(tdee - 500);
-      case 'gain':
-        return Math.round(tdee + 500);
-      default:
-        return Math.round(tdee);
-    }
-  };
-
-  const targetCalories = userProfile ? calculateTargetCalories(userProfile) : 0;
 
   // Show unified auth if not authenticated
   if (!isAuthenticated) {
@@ -80,56 +49,20 @@ function App() {
       <div className="relative z-10">
         <Header />
 
-      <ProtectedRoute>
-        {isAdmin ? (
-          <AdminDashboard />
-        ) : (
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {!userProfile ? (
-              <div className="text-center mb-8 bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
-                <h2 className="text-4xl font-bold text-white mb-4">
-                  Welcome to Your Fitness Journey
-                </h2>
-                <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                  Get personalized diet plans, exercise routines, and expert guidance based on your unique goals and body metrics.
-                </p>
-              </div>
-            ) : (
-              <div className="text-center mb-8 bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
-                <h2 className="text-3xl font-bold text-white mb-2">
-                  Welcome back, {userProfile.name}!
-                </h2>
-                <p className="text-lg text-gray-300">
-                  Your personalized fitness plan is ready. Let's achieve your goals together!
-                </p>
-              </div>
-            )}
-
-          <UserProfileForm 
-            onProfileSubmit={setUserProfile} 
-            currentProfile={userProfile}
-          />
-
-          {userProfile && (
-            <>
-              <CalorieCalculator profile={userProfile} />
-              
-              <DietPlan 
-                targetCalories={targetCalories} 
-                goal={userProfile.goal} 
-              />
-              
-              <ExerciseRoutines />
-              
-              <Assistant 
-                userProfile={userProfile} 
-                targetCalories={targetCalories} 
-              />
-            </>
+        <ProtectedRoute>
+          {isAdmin ? (
+            <AdminDashboard />
+          ) : (
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/nutrition" element={<Nutrition />} />
+              <Route path="/exercise" element={<Exercise />} />
+              <Route path="/assistant" element={<AssistantPage />} />
+            </Routes>
           )}
-          </main>
-        )}
-      </ProtectedRoute>
+        </ProtectedRoute>
 
       {/* Footer */}
       {isAuthenticated && (
