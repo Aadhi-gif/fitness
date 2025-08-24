@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import {
   Mail, Lock, Eye, EyeOff, User, Dumbbell,
   Heart, Zap, Target, ArrowRight, Sparkles, Trophy,
-  Flame, Lightning, Medal, Crown, Sword, Shield, Info
+  Flame, Lightning, Medal, Crown, Sword, Shield, Info, Github
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import DemoAccountStatus from './DemoAccountStatus';
 
 const UnifiedAuth: React.FC = () => {
-  const { login, register, resetPassword, error, isLoading } = useAuth();
+  const { login, register, resetPassword, loginWithGitHub, getSavedCredentials, error, isLoading } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [currentBg, setCurrentBg] = useState(0);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,6 +22,19 @@ const UnifiedAuth: React.FC = () => {
     password: '',
     confirmPassword: ''
   });
+
+  // Auto-fill saved credentials on component mount
+  useEffect(() => {
+    const savedCredentials = getSavedCredentials();
+    if (savedCredentials && isLogin) {
+      setFormData(prev => ({
+        ...prev,
+        email: savedCredentials.email,
+        password: savedCredentials.password
+      }));
+      setRememberMe(true);
+    }
+  }, [isLogin, getSavedCredentials]);
 
   // Elite male athlete-inspired background images and motivational content
   const backgroundImages = [
@@ -119,11 +133,18 @@ const UnifiedAuth: React.FC = () => {
     return { isValid: errors.length === 0, errors };
   };
 
+  const handleGitHubLogin = async () => {
+    const success = await loginWithGitHub();
+    if (success) {
+      console.log('GitHub login successful');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isLogin) {
-      const success = await login({ email: formData.email, password: formData.password });
+      const success = await login({ email: formData.email, password: formData.password }, rememberMe);
       if (success) {
         // Login successful, user will be redirected by App.tsx
         console.log('Login successful');
@@ -566,6 +587,44 @@ const UnifiedAuth: React.FC = () => {
                         Elite passwords must match
                       </p>
                     )}
+                  </div>
+                )}
+
+                {/* Remember Me Checkbox (Login only) */}
+                {isLogin && (
+                  <div className="flex items-center gap-3 mb-4">
+                    <input
+                      type="checkbox"
+                      id="rememberMe"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 text-orange-600 bg-black/50 border-orange-500/50 rounded focus:ring-orange-500 focus:ring-2"
+                    />
+                    <label htmlFor="rememberMe" className="text-gray-300 text-sm cursor-pointer">
+                      Remember my credentials for easy access
+                    </label>
+                  </div>
+                )}
+
+                {/* GitHub Login Button (Login only) */}
+                {isLogin && (
+                  <button
+                    type="button"
+                    onClick={handleGitHubLogin}
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-3 rounded-xl font-semibold hover:from-gray-700 hover:to-gray-800 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 border border-gray-600/50 mb-4"
+                  >
+                    <Github className="w-5 h-5" />
+                    Continue with GitHub
+                  </button>
+                )}
+
+                {/* Divider */}
+                {isLogin && (
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+                    <span className="text-gray-400 text-sm">OR</span>
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
                   </div>
                 )}
 

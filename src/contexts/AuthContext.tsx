@@ -5,12 +5,15 @@ import { activityLogger } from '../services/activityLogger';
 import { demoAccountManager } from '../services/demoAccountManager';
 
 interface AuthContextType extends AuthState {
-  login: (credentials: LoginCredentials) => Promise<boolean>;
+  login: (credentials: LoginCredentials, rememberMe?: boolean) => Promise<boolean>;
   register: (credentials: RegisterCredentials) => Promise<boolean>;
   logout: () => Promise<void>;
   updateProfile: (userData: Partial<User>) => Promise<boolean>;
   refreshUserProfile: () => Promise<void>;
   resetPassword: (email: string) => Promise<boolean>;
+  loginWithGitHub: () => Promise<boolean>;
+  getSavedCredentials: () => { email: string; password: string } | null;
+  clearSavedCredentials: () => void;
   error: string | null;
   clearError: () => void;
   isBackendConnected: boolean;
@@ -37,7 +40,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isLoading: true,
   });
   const [error, setError] = useState<string | null>(null);
-  const [isBackendConnected, setIsBackendConnected] = useState(true); // Start optimistic
+  const [isBackendConnected, setIsBackendConnected] = useState(true);
+
+  // Credential management functions (defined early for use in useEffect)
+  const getSavedCredentials = (): { email: string; password: string } | null => {
+    try {
+      const saved = localStorage.getItem('fitlife_saved_credentials');
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.error('Failed to retrieve saved credentials:', error);
+      return null;
+    }
+  };
+
+  const clearSavedCredentials = () => {
+    try {
+      localStorage.removeItem('fitlife_saved_credentials');
+    } catch (error) {
+      console.error('Failed to clear saved credentials:', error);
+    }
+  }; // Start optimistic
 
   // Mock user database (fallback when backend is not available)
   const mockUsers = [
@@ -92,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
         }
 
-        // Fallback to session storage (auto-logout on tab close)
+        // Check session storage first (current session)
         const savedUser = sessionStorage.getItem('fitlife_user');
         if (savedUser) {
           try {
@@ -102,18 +124,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               isAuthenticated: true,
               isLoading: false,
             });
+            return;
           } catch (error) {
             console.error('Failed to parse saved user data:', error);
             sessionStorage.removeItem('fitlife_user');
-            setAuthState({
-              user: null,
-              isAuthenticated: false,
-              isLoading: false,
-            });
           }
-        } else {
-          setAuthState(prev => ({ ...prev, isLoading: false }));
         }
+
+        // Check for saved credentials (persistent login)
+        const savedCredentials = getSavedCredentials();
+        if (savedCredentials) {
+          try {
+            // Attempt auto-login with saved credentials
+            const success = await login(savedCredentials, true);
+            if (success) {
+              return; // Successfully logged in
+            }
+          } catch (error) {
+            console.error('Auto-login failed:', error);
+            clearSavedCredentials(); // Clear invalid credentials
+          }
+        }
+
+        setAuthState(prev => ({ ...prev, isLoading: false }));
       } catch (error) {
         console.error('Auth initialization error:', error);
         setAuthState(prev => ({ ...prev, isLoading: false }));
@@ -162,7 +195,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
   }, [authState.user]); // Include authState.user in dependency array
 
-  const login = async (credentials: LoginCredentials): Promise<boolean> => {
+  const login = async (credentials: LoginCredentials, rememberMe: boolean = false): Promise<boolean> => {
     setError(null);
     setAuthState(prev => ({ ...prev, isLoading: true }));
 
@@ -201,6 +234,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // Record demo account usage if applicable
           if (demoAccountManager.isDemoEmail(response.user.email)) {
             demoAccountManager.recordDemoUsage();
+          }
+
+          // Save credentials if rememberMe is enabled
+          if (rememberMe) {
+            saveCredentials(credentials.email, credentials.password);
+          } else {
+            clearSavedCredentials();
           }
 
           setIsBackendConnected(true);
@@ -266,6 +306,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Record demo account usage if applicable
       if (demoAccountManager.isDemoEmail(authenticatedUser.email)) {
         demoAccountManager.recordDemoUsage();
+      }
+
+      // Save credentials if rememberMe is enabled
+      if (rememberMe) {
+        saveCredentials(credentials.email, credentials.password);
+      } else {
+        clearSavedCredentials();
       }
 
       return true;
@@ -468,6 +515,64 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
   };
 
+  // Credential saving function
+  const saveCredentials = (email: string, password: string) => {
+    try {
+      const credentials = { email, password };
+      localStorage.setItem('fitlife_saved_credentials', JSON.stringify(credentials));
+    } catch (error) {
+      console.error('Failed to save credentials:', error);
+    }
+  };
+
+  // GitHub OAuth login
+  const loginWithGitHub = async (): Promise<boolean> => {
+    try {
+      setAuthState(prev => ({ ...prev, isLoading: true }));
+      setError(null);
+
+      // For demo purposes, simulate GitHub OAuth flow
+      // In a real app, this would redirect to GitHub OAuth
+      const githubUser = {
+        id: 'github_' + Math.random().toString(36).substring(2, 15),
+        email: 'github.user@example.com',
+        name: 'GitHub User',
+        age: 25,
+        weight: 70,
+        height: 175,
+        goal: 'maintain' as const,
+        activityLevel: 'moderate' as const,
+        role: 'user' as const,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      sessionStorage.setItem('fitlife_user', JSON.stringify(githubUser));
+      setAuthState({
+        user: githubUser,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+
+      // Log GitHub login
+      activityLogger.logLogin(
+        githubUser.id,
+        githubUser.name,
+        githubUser.email,
+        true,
+        undefined,
+        'GitHub OAuth'
+      );
+
+      return true;
+    } catch (error) {
+      console.error('GitHub login error:', error);
+      setError('Failed to login with GitHub. Please try again.');
+      setAuthState(prev => ({ ...prev, isLoading: false }));
+      return false;
+    }
+  };
+
   const value: AuthContextType = {
     ...authState,
     login,
@@ -476,6 +581,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     updateProfile,
     refreshUserProfile,
     resetPassword,
+    loginWithGitHub,
+    getSavedCredentials,
+    clearSavedCredentials,
     error,
     clearError,
     isBackendConnected,
