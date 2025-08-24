@@ -7,7 +7,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import UnifiedAuth from './components/UnifiedAuth';
 import AdminDashboard from './components/AdminDashboard';
 
-// Import page components
+// Import page components - Original App Structure
+import YourProfile from './pages/YourProfile';
+import YourCaloriePlan from './pages/YourCaloriePlan';
+import YourPersonalizedDietPlan from './pages/YourPersonalizedDietPlan';
+import ExerciseRoutinesPage from './pages/ExerciseRoutines';
+
+// Import additional pages
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Nutrition from './pages/Nutrition';
@@ -59,7 +65,14 @@ function App() {
             <AdminDashboard />
           ) : (
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              {/* Main App Structure - Original 4 Sections */}
+              <Route path="/" element={<YourProfile />} />
+              <Route path="/your-profile" element={<YourProfile />} />
+              <Route path="/your-calorie-plan" element={<YourCaloriePlan />} />
+              <Route path="/your-diet-plan" element={<YourPersonalizedDietPlan />} />
+              <Route path="/exercise-routines" element={<ExerciseRoutinesPage />} />
+
+              {/* Additional Pages */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/nutrition" element={<Nutrition />} />

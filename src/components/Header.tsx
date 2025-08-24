@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Dumbbell, User, LogOut, Settings, Home, UserCircle,
   Apple, Zap, Bot, Crown, Menu, X, TrendingUp, Target,
-  ChefHat, BookOpen
+  ChefHat, BookOpen, Calculator, Utensils
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import BackendStatus from './BackendStatus';
@@ -20,13 +20,14 @@ const Header: React.FC = () => {
   };
 
   const navigationItems = [
+    // Original 4 Main Sections
+    { path: '/your-profile', label: 'Your Profile', icon: UserCircle },
+    { path: '/your-calorie-plan', label: 'Your Calorie Plan', icon: Calculator },
+    { path: '/your-diet-plan', label: 'Your Diet Plan', icon: Utensils },
+    { path: '/exercise-routines', label: 'Exercise Routines', icon: Dumbbell },
+
+    // Additional Features
     { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/exercise', label: 'Training', icon: Zap },
-    { path: '/workout-library', label: 'Exercises', icon: Dumbbell },
-    { path: '/nutrition', label: 'Nutrition', icon: Apple },
-    { path: '/meal-planning', label: 'Meal Plans', icon: ChefHat },
-    { path: '/progress', label: 'Progress', icon: TrendingUp },
-    { path: '/goals', label: 'Goals', icon: Target },
     { path: '/assistant', label: 'AI Coach', icon: Bot }
   ];
 
@@ -58,7 +59,7 @@ const Header: React.FC = () => {
                 <nav className="hidden md:flex items-center gap-1">
                   {navigationItems.map((item) => {
                     const isActive = location.pathname === item.path ||
-                      (item.path === '/dashboard' && location.pathname === '/');
+                      (item.path === '/your-profile' && location.pathname === '/');
                     return (
                       <Link
                         key={item.path}
@@ -159,7 +160,7 @@ const Header: React.FC = () => {
             <nav className="px-4 py-4 space-y-2">
               {navigationItems.map((item) => {
                 const isActive = location.pathname === item.path ||
-                  (item.path === '/dashboard' && location.pathname === '/');
+                  (item.path === '/your-profile' && location.pathname === '/');
                 return (
                   <Link
                     key={item.path}
