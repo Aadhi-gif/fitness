@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Mail, Lock, Eye, EyeOff, User, Dumbbell,
   Heart, Zap, Target, ArrowRight, Sparkles, Trophy,
-  Flame, Lightning, Medal, Crown, Sword, Shield
+  Flame, Lightning, Medal, Crown, Sword, Shield, Info
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import DemoAccountStatus from './DemoAccountStatus';
@@ -587,8 +587,20 @@ const UnifiedAuth: React.FC = () => {
                 </button>
               </form>
 
+              {/* Auto-Logout Notice */}
+              <div className="mt-6 p-4 bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl border border-blue-500/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Info className="w-4 h-4 text-blue-400" />
+                  <span className="text-blue-300 font-semibold text-sm">Security Notice</span>
+                </div>
+                <p className="text-gray-300 text-xs">
+                  For your security, you'll be automatically logged out when you close this browser tab.
+                  Your session data will not persist between browser sessions.
+                </p>
+              </div>
+
               {/* Switch Mode */}
-              <div className="mt-8 text-center">
+              <div className="mt-6 text-center">
                 <p className="text-gray-300">
                   {isLogin ? "New to the elite ranks?" : "Already a champion?"}
                 </p>

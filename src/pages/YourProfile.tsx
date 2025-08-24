@@ -17,13 +17,13 @@ const YourProfile: React.FC = () => {
 
   const handleProfileSubmit = (profile: UserProfile) => {
     setUserProfile(profile);
-    // Here you would typically save to backend/localStorage
-    localStorage.setItem('userProfile', JSON.stringify(profile));
+    // Save to sessionStorage (will be cleared when tab closes)
+    sessionStorage.setItem('userProfile', JSON.stringify(profile));
   };
 
-  // Load profile from localStorage on component mount
+  // Load profile from sessionStorage on component mount
   React.useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
+    const savedProfile = sessionStorage.getItem('userProfile');
     if (savedProfile) {
       setUserProfile(JSON.parse(savedProfile));
     }

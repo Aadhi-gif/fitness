@@ -16,13 +16,13 @@ const YourPersonalizedDietPlan: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [targetCalories, setTargetCalories] = useState<number>(0);
 
-  // Load profile from localStorage on component mount
+  // Load profile from sessionStorage on component mount
   useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
+    const savedProfile = sessionStorage.getItem('userProfile');
     if (savedProfile) {
       const profile = JSON.parse(savedProfile);
       setUserProfile(profile);
-      
+
       // Calculate target calories
       const calories = calculateTargetCalories(profile);
       setTargetCalories(calories);

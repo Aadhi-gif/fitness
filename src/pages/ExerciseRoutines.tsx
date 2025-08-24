@@ -15,9 +15,9 @@ interface UserProfile {
 const ExerciseRoutinesPage: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-  // Load profile from localStorage on component mount
+  // Load profile from sessionStorage on component mount
   useEffect(() => {
-    const savedProfile = localStorage.getItem('userProfile');
+    const savedProfile = sessionStorage.getItem('userProfile');
     if (savedProfile) {
       setUserProfile(JSON.parse(savedProfile));
     }

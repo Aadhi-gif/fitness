@@ -86,14 +86,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setIsBackendConnected(true);
             return;
           } catch (error) {
-            console.warn('Backend not available, falling back to local storage');
+            console.warn('Backend not available, falling back to session storage');
             setIsBackendConnected(false);
             tokenManager.clearTokens(); // Clear invalid tokens
           }
         }
 
-        // Fallback to local storage
-        const savedUser = localStorage.getItem('fitlife_user');
+        // Fallback to session storage (auto-logout on tab close)
+        const savedUser = sessionStorage.getItem('fitlife_user');
         if (savedUser) {
           try {
             const user = JSON.parse(savedUser);
@@ -104,7 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             });
           } catch (error) {
             console.error('Failed to parse saved user data:', error);
-            localStorage.removeItem('fitlife_user');
+            sessionStorage.removeItem('fitlife_user');
             setAuthState({
               user: null,
               isAuthenticated: false,
@@ -120,8 +120,47 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     };
 
+    // Auto-logout on tab close/page unload
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Clear session storage when tab is closed
+      const currentUser = authState.user;
+      if (currentUser) {
+        // Log logout activity
+        activityLogger.logLogout(
+          currentUser.id,
+          currentUser.name,
+          currentUser.email
+        );
+
+        // Clear session data
+        sessionStorage.removeItem('fitlife_user');
+        tokenManager.clearTokens();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      // Additional cleanup when page becomes hidden
+      if (document.visibilityState === 'hidden') {
+        const currentUser = authState.user;
+        if (currentUser) {
+          // Save logout timestamp for potential cleanup
+          sessionStorage.setItem('fitlife_logout_time', Date.now().toString());
+        }
+      }
+    };
+
+    // Add event listeners
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     initializeAuth();
-  }, []);
+
+    // Cleanup event listeners
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [authState.user]); // Include authState.user in dependency array
 
   const login = async (credentials: LoginCredentials): Promise<boolean> => {
     setError(null);
@@ -209,7 +248,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         updatedAt: user.updatedAt,
       };
 
-      localStorage.setItem('fitlife_user', JSON.stringify(authenticatedUser));
+      sessionStorage.setItem('fitlife_user', JSON.stringify(authenticatedUser));
       setAuthState({
         user: authenticatedUser,
         isAuthenticated: true,
@@ -276,7 +315,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password: credentials.password,
       });
 
-      localStorage.setItem('fitlife_user', JSON.stringify(newUser));
+      sessionStorage.setItem('fitlife_user', JSON.stringify(newUser));
       setAuthState({
         user: newUser,
         isAuthenticated: true,
@@ -317,7 +356,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       tokenManager.clearTokens();
-      localStorage.removeItem('fitlife_user');
+      sessionStorage.removeItem('fitlife_user');
       setAuthState({
         user: null,
         isAuthenticated: false,
@@ -352,7 +391,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const currentUser = authState.user;
         if (currentUser) {
           const updatedUser = { ...currentUser, ...userData, updatedAt: new Date().toISOString() };
-          localStorage.setItem('fitlife_user', JSON.stringify(updatedUser));
+          sessionStorage.setItem('fitlife_user', JSON.stringify(updatedUser));
           setAuthState(prev => ({
             ...prev,
             user: updatedUser
