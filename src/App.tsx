@@ -13,6 +13,11 @@ import Profile from './pages/Profile';
 import Nutrition from './pages/Nutrition';
 import Exercise from './pages/Exercise';
 import AssistantPage from './pages/Assistant';
+import Progress from './pages/Progress';
+import Goals from './pages/Goals';
+import Settings from './pages/Settings';
+import WorkoutLibrary from './pages/WorkoutLibrary';
+import MealPlanning from './pages/MealPlanning';
 
 interface UserProfile {
   name: string;
@@ -60,6 +65,11 @@ function App() {
               <Route path="/nutrition" element={<Nutrition />} />
               <Route path="/exercise" element={<Exercise />} />
               <Route path="/assistant" element={<AssistantPage />} />
+              <Route path="/progress" element={<Progress />} />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/workout-library" element={<WorkoutLibrary />} />
+              <Route path="/meal-planning" element={<MealPlanning />} />
             </Routes>
           )}
         </ProtectedRoute>

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Dumbbell, User, LogOut, Settings, Home, UserCircle,
-  Apple, Zap, Bot, Crown, Menu, X
+  Apple, Zap, Bot, Crown, Menu, X, TrendingUp, Target,
+  ChefHat, BookOpen
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import BackendStatus from './BackendStatus';
@@ -20,9 +21,12 @@ const Header: React.FC = () => {
 
   const navigationItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/profile', label: 'Profile', icon: UserCircle },
+    { path: '/exercise', label: 'Training', icon: Zap },
+    { path: '/workout-library', label: 'Exercises', icon: Dumbbell },
     { path: '/nutrition', label: 'Nutrition', icon: Apple },
-    { path: '/exercise', label: 'Exercise', icon: Zap },
+    { path: '/meal-planning', label: 'Meal Plans', icon: ChefHat },
+    { path: '/progress', label: 'Progress', icon: TrendingUp },
+    { path: '/goals', label: 'Goals', icon: Target },
     { path: '/assistant', label: 'AI Coach', icon: Bot }
   ];
 
@@ -123,8 +127,16 @@ const Header: React.FC = () => {
                         onClick={() => setShowUserMenu(false)}
                         className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-orange-600/20 flex items-center gap-2 transition-all"
                       >
+                        <UserCircle className="w-4 h-4" />
+                        Profile
+                      </Link>
+                      <Link
+                        to="/settings"
+                        onClick={() => setShowUserMenu(false)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-orange-600/20 flex items-center gap-2 transition-all"
+                      >
                         <Settings className="w-4 h-4" />
-                        Profile Settings
+                        Settings
                       </Link>
                       <button
                         onClick={handleLogout}
