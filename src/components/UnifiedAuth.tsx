@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Mail, Lock, Eye, EyeOff, User, Dumbbell,
   Heart, Zap, Target, ArrowRight, Sparkles, Trophy,
-  Flame, Lightning, Medal, Crown, Sword, Shield, Info, Github
+  Flame, Medal, Crown, Sword, Shield, Info, Github
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import DemoAccountStatus from './DemoAccountStatus';
