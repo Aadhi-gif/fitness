@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Target, Trophy, Crown } from 'lucide-react';
 import UserProfileForm from '../components/UserProfileForm';
+import QuickSettingsButton from '../components/QuickSettingsButton';
 
 interface UserProfile {
   name: string;
@@ -119,11 +120,16 @@ const YourProfile: React.FC = () => {
         )}
 
         {/* Profile Form */}
-        <div className="bg-gradient-to-br from-black/40 to-gray-900/40 backdrop-blur-sm rounded-3xl p-8 border border-blue-500/30">
-          <UserProfileForm 
-            onProfileSubmit={handleProfileSubmit} 
+        <div className="bg-gradient-to-br from-black/40 to-gray-900/40 backdrop-blur-sm rounded-3xl p-8 border border-blue-500/30 mb-8">
+          <UserProfileForm
+            onProfileSubmit={handleProfileSubmit}
             currentProfile={userProfile}
           />
+        </div>
+
+        {/* Quick Settings Access */}
+        <div className="mb-8">
+          <QuickSettingsButton />
         </div>
 
         {/* Profile Summary (if profile exists) */}

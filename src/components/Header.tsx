@@ -5,7 +5,7 @@ import {
   Apple, Zap, Bot, Crown, Menu, X, TrendingUp, Target,
   ChefHat, BookOpen, Calculator, Utensils
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/DatabaseAuthContext';
 import BackendStatus from './BackendStatus';
 
 const Header: React.FC = () => {
@@ -28,7 +28,8 @@ const Header: React.FC = () => {
 
     // Additional Features
     { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/assistant', label: 'AI Coach', icon: Bot }
+    { path: '/assistant', label: 'AI Coach', icon: Bot },
+    { path: '/settings', label: 'Settings', icon: Settings }
   ];
 
   return (
