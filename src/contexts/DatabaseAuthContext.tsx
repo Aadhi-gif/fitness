@@ -159,22 +159,68 @@ export const DatabaseAuthProvider: React.FC<AuthProviderProps> = ({ children }) 
     setAuthState(prev => ({ ...prev, isLoading: true }));
 
     try {
-      // Try to find user in database
-      const dbUser = await userService.findUserByEmail(credentials.email);
-      
-      if (!dbUser || !verifyPassword(credentials.password, dbUser.password)) {
-        // Log failed login attempt
-        await activityService.logActivity({
-          userId: 'unknown',
-          type: 'AUTH',
-          action: 'login_failed',
-          details: { email: credentials.email, reason: 'Invalid credentials' },
+      // First try database authentication
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const dbUser = data.user;
+
+        // Convert database user to app user format
+        const authenticatedUser: User = {
+          id: dbUser.id,
+          email: dbUser.email,
+          name: dbUser.name,
+          age: dbUser.profile?.age || 25,
+          weight: dbUser.profile?.weight || 70,
+          height: dbUser.profile?.height || 170,
+          goal: mapGoalFromDB(dbUser.profile?.goal) || 'maintain',
+          activityLevel: mapActivityLevelFromDB(dbUser.profile?.activityLevel) || 'moderate',
+          role: dbUser.role.toLowerCase() as 'user' | 'admin',
+          createdAt: dbUser.createdAt,
+          updatedAt: dbUser.updatedAt,
+        };
+
+        // Save to session storage
+        sessionStorage.setItem('fitlife_user', JSON.stringify(authenticatedUser));
+        setAuthState({
+          user: authenticatedUser,
+          isAuthenticated: true,
+          isLoading: false,
         });
-        
-        setError('Invalid email or password');
+
+        // Save credentials if rememberMe is enabled
+        if (rememberMe) {
+          saveCredentials(credentials.email, credentials.password);
+        } else {
+          clearSavedCredentials();
+        }
+
+        // Save user to saved users list
+        saveUserToList(authenticatedUser.email, authenticatedUser.name, authenticatedUser.role);
+
+        setIsBackendConnected(true);
+        return true;
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Login failed');
         setAuthState(prev => ({ ...prev, isLoading: false }));
         return false;
       }
+    } catch (error) {
+      console.error('Database login error:', error);
+      setError('Login failed. Please try again.');
+      setAuthState(prev => ({ ...prev, isLoading: false }));
+      setIsBackendConnected(false);
+      return false;
+    }
+  };
 
       // Convert database user to app user format
       const authenticatedUser: User = {
@@ -230,59 +276,58 @@ export const DatabaseAuthProvider: React.FC<AuthProviderProps> = ({ children }) 
     setAuthState(prev => ({ ...prev, isLoading: true }));
 
     try {
-      // Check if user already exists
-      const existingUser = await userService.findUserByEmail(credentials.email);
-      if (existingUser) {
-        setError('An account with this email already exists');
+      // Try database registration via API
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newUser = data.user;
+
+        // Convert to app user format
+        const authenticatedUser: User = {
+          id: newUser.id,
+          email: newUser.email,
+          name: newUser.name,
+          age: 25,
+          weight: 70,
+          height: 170,
+          goal: 'maintain',
+          activityLevel: 'moderate',
+          role: newUser.role.toLowerCase() as 'user' | 'admin',
+          createdAt: newUser.createdAt,
+          updatedAt: newUser.updatedAt,
+        };
+
+        // Save to session storage
+        sessionStorage.setItem('fitlife_user', JSON.stringify(authenticatedUser));
+        setAuthState({
+          user: authenticatedUser,
+          isAuthenticated: true,
+          isLoading: false,
+        });
+
+        // Save user to saved users list
+        saveUserToList(authenticatedUser.email, authenticatedUser.name, authenticatedUser.role);
+
+        setIsBackendConnected(true);
+        return true;
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Registration failed');
         setAuthState(prev => ({ ...prev, isLoading: false }));
         return false;
       }
-
-      // Create new user
-      const hashedPassword = hashPassword(credentials.password);
-      const newUser = await userService.createUser({
-        email: credentials.email,
-        password: hashedPassword,
-        name: credentials.name,
-        role: 'USER',
-      });
-
-      // Convert to app user format
-      const authenticatedUser: User = {
-        id: newUser.id,
-        email: newUser.email,
-        name: newUser.name,
-        age: 25,
-        weight: 70,
-        height: 170,
-        goal: 'maintain',
-        activityLevel: 'moderate',
-        role: 'user',
-        createdAt: newUser.createdAt.toISOString(),
-        updatedAt: newUser.updatedAt.toISOString(),
-      };
-
-      // Save to session storage
-      sessionStorage.setItem('fitlife_user', JSON.stringify(authenticatedUser));
-      setAuthState({
-        user: authenticatedUser,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-
-      // Log successful registration
-      await activityService.logActivity({
-        userId: authenticatedUser.id,
-        type: 'AUTH',
-        action: 'register_success',
-        details: { method: 'email_password' },
-      });
-
-      return true;
     } catch (error) {
       console.error('Database registration error:', error);
       setError('Registration failed. Please try again.');
       setAuthState(prev => ({ ...prev, isLoading: false }));
+      setIsBackendConnected(false);
       return false;
     }
   };
@@ -360,6 +405,29 @@ export const DatabaseAuthProvider: React.FC<AuthProviderProps> = ({ children }) 
       localStorage.setItem('fitlife_saved_credentials', JSON.stringify(credentials));
     } catch (error) {
       console.error('Failed to save credentials:', error);
+    }
+  };
+
+  const saveUserToList = (email: string, name: string, role: 'user' | 'admin' = 'user') => {
+    try {
+      const savedUsers = JSON.parse(localStorage.getItem('fitlife_saved_users') || '[]');
+      const newUser = {
+        email,
+        name,
+        role,
+        lastLogin: new Date().toISOString(),
+      };
+
+      // Remove existing user with same email and add new one at the beginning
+      const updatedUsers = savedUsers.filter((user: any) => user.email !== email);
+      updatedUsers.unshift(newUser);
+
+      // Keep only last 5 users
+      const limitedUsers = updatedUsers.slice(0, 5);
+
+      localStorage.setItem('fitlife_saved_users', JSON.stringify(limitedUsers));
+    } catch (error) {
+      console.error('Failed to save user to list:', error);
     }
   };
 

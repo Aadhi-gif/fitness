@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
   Mail, Lock, Eye, EyeOff, User, Dumbbell,
   Heart, Zap, Target, ArrowRight, Sparkles, Trophy,
-  Flame, Medal, Crown, Sword, Shield, Info, Github
+  Flame, Medal, Crown, Sword, Shield, Info
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/DatabaseAuthContext';
 import DemoAccountStatus from './DemoAccountStatus';
+import SavedUsersManager from './SavedUsersManager';
 
 const UnifiedAuth: React.FC = () => {
   const { login, register, resetPassword, loginWithGitHub, getSavedCredentials, error, isLoading } = useAuth();
@@ -407,7 +408,14 @@ const UnifiedAuth: React.FC = () => {
 
         {/* Right Side - Elite Auth Form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-2xl space-y-6">
+            {/* Saved Users Manager (Login Only) */}
+            {isLogin && (
+              <div className="mb-6">
+                <SavedUsersManager />
+              </div>
+            )}
+
             {/* Elite Form Container */}
             <div className="bg-gradient-to-br from-black/90 to-gray-900/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-orange-500/30">
               {/* Elite Form Header */}
@@ -614,7 +622,7 @@ const UnifiedAuth: React.FC = () => {
                     disabled={isLoading}
                     className="w-full bg-gradient-to-r from-gray-800 to-gray-900 text-white py-3 rounded-xl font-semibold hover:from-gray-700 hover:to-gray-800 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 border border-gray-600/50 mb-4"
                   >
-                    <Github className="w-5 h-5" />
+                    <User className="w-5 h-5" />
                     Continue with GitHub
                   </button>
                 )}
