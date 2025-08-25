@@ -15,10 +15,36 @@ interface UserProfile {
 const YourProfile: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
-  const handleProfileSubmit = (profile: UserProfile) => {
+  const handleProfileSubmit = async (profile: UserProfile) => {
     setUserProfile(profile);
-    // Save to sessionStorage (will be cleared when tab closes)
-    sessionStorage.setItem('userProfile', JSON.stringify(profile));
+
+    // Save to database via API
+    try {
+      const response = await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 'current-user-id', // Will be replaced with actual user ID
+          profileData: profile,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Profile saved to database successfully');
+        // Also save to sessionStorage as backup
+        sessionStorage.setItem('userProfile', JSON.stringify(profile));
+      } else {
+        console.error('Failed to save profile to database');
+        // Fallback to sessionStorage
+        sessionStorage.setItem('userProfile', JSON.stringify(profile));
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      // Fallback to sessionStorage
+      sessionStorage.setItem('userProfile', JSON.stringify(profile));
+    }
   };
 
   // Load profile from sessionStorage on component mount

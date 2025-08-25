@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { User, Scale, Ruler, Calendar, Activity } from 'lucide-react';
+import { dataStorage } from '../services/dataStorage';
+import { useAuth } from '../contexts/DatabaseAuthContext';
 
 interface UserProfile {
   name: string;
@@ -17,6 +19,7 @@ interface UserProfileFormProps {
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ onProfileSubmit, currentProfile }) => {
+  const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile>(currentProfile || {
     name: '',
     age: 25,
@@ -26,10 +29,34 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onProfileSubmit, curr
     activityLevel: 'moderate',
     goal: 'maintain'
   });
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onProfileSubmit(profile);
+    setIsSaving(true);
+
+    try {
+      // Save to database if user is logged in
+      if (user?.id) {
+        const success = await dataStorage.saveProfile(user.id, profile);
+        if (success) {
+          console.log('✅ Profile saved to database');
+          // Log activity
+          await dataStorage.logActivity(user.id, 'PROFILE', 'profile_updated', { profileData: profile });
+        } else {
+          console.warn('⚠️ Database save failed, using local storage fallback');
+        }
+      }
+
+      // Always call the parent callback
+      onProfileSubmit(profile);
+    } catch (error) {
+      console.error('❌ Error saving profile:', error);
+      // Still call parent callback for fallback behavior
+      onProfileSubmit(profile);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -153,9 +180,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ onProfileSubmit, curr
 
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 shadow-lg"
+          disabled={isSaving}
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
-          Save Profile & Calculate
+          {isSaving ? '💾 Saving to Database...' : '💾 Save Profile & Calculate'}
         </button>
       </form>
     </div>

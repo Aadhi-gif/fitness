@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
-import { AuthProvider } from './contexts/AuthContext';
+import { DatabaseAuthProvider as AuthProvider } from './contexts/DatabaseAuthContext';
 import './index.css';
 
 // Add comprehensive error handling for GitHub Pages debugging

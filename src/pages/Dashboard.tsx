@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trophy, Target, Flame, Zap, TrendingUp, Calendar } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/DatabaseAuthContext';
+import DataStorageDemo from '../components/DataStorageDemo';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -104,6 +105,11 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Database Storage Demo */}
+        <div className="mb-8">
+          <DataStorageDemo />
+        </div>
+
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-br from-red-600/20 to-orange-600/20 backdrop-blur-sm rounded-2xl p-6 border border-red-500/30">
@@ -113,7 +119,7 @@ const Dashboard: React.FC = () => {
               START TRAINING
             </button>
           </div>
-          
+
           <div className="bg-gradient-to-br from-orange-600/20 to-yellow-600/20 backdrop-blur-sm rounded-2xl p-6 border border-orange-500/30">
             <h3 className="text-xl font-bold text-white mb-3">Nutrition Plan</h3>
             <p className="text-gray-300 mb-4">2,800 calories remaining today</p>
@@ -121,11 +127,11 @@ const Dashboard: React.FC = () => {
               VIEW MEALS
             </button>
           </div>
-          
+
           <div className="bg-gradient-to-br from-yellow-600/20 to-green-600/20 backdrop-blur-sm rounded-2xl p-6 border border-yellow-500/30">
             <h3 className="text-xl font-bold text-white mb-3">AI Coach</h3>
             <p className="text-gray-300 mb-4">Get personalized guidance</p>
-            <button className="w-full bg-gradient-to-r from-yellow-600 to-green-600 text-white py-3 rounded-xl font-bold hover:from-yellow-700 hover:to-green-700 transition-all">
+            <button className="w-full bg-gradient-to-r from-yellow-600 to-green-600 text-white py-3 rounded-xl font-bold hover:from-orange-700 hover:to-green-700 transition-all">
               ASK COACH
             </button>
           </div>
