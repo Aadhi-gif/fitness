@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Mail, Lock, Eye, EyeOff, User, Dumbbell,
-  Heart, Zap, Target, ArrowRight, Sparkles, Trophy,
+  Heart, Zap, Target, ArrowRight, Lightning, Trophy,
   Flame, Medal, Crown, Sword, Shield, Info
 } from 'lucide-react';
 import { useAuth } from '../contexts/DatabaseAuthContext';
@@ -23,6 +23,23 @@ const UnifiedAuth: React.FC = () => {
     password: '',
     confirmPassword: ''
   });
+
+  // Lightning Performance Data
+  const lightningMetrics = {
+    powerOutput: ['1,247 watts', '1,156 watts', '1,389 watts', '1,203 watts'],
+    speedBurst: ['28.3 mph', '29.1 mph', '27.8 mph', '30.2 mph'],
+    reactionTime: ['0.142s', '0.138s', '0.151s', '0.134s'],
+    efficiency: ['94.7%', '96.2%', '93.1%', '97.8%']
+  };
+
+  const lightningTrainingModes = [
+    'Explosive Power Development',
+    'Sprint Interval Training',
+    'Plyometric Progressions',
+    'Reaction Time Training',
+    'Speed Endurance Protocols',
+    'Agility Enhancement'
+  ];
 
   // Auto-fill saved credentials on component mount
   useEffect(() => {
@@ -49,11 +66,23 @@ const UnifiedAuth: React.FC = () => {
     },
     {
       url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-      title: 'CARDIO WARRIOR',
-      description: 'Unleash unstoppable endurance',
+      title: 'LIGHTNING PERFORMANCE',
+      description: 'Explosive power & speed training',
       icon: Lightning,
-      stats: 'Elite athletes: 40-60 VO2 max',
-      quote: '"Pain is temporary, quitting lasts forever"'
+      stats: 'Elite sprinters: 0-60mph in 3.2 seconds',
+      quote: '"Speed kills, but precision is lethal"',
+      features: [
+        'Explosive Power Training',
+        'Sprint Interval Protocols',
+        'Plyometric Progressions',
+        'Reaction Time Enhancement'
+      ],
+      metrics: {
+        powerOutput: '1200+ watts peak',
+        acceleration: '9.8 m/s² max',
+        reactionTime: '<0.15 seconds',
+        speedEndurance: '95% max speed for 200m'
+      }
     },
     {
       url: 'https://images.unsplash.com/photo-1594381898411-846e7d193883?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
@@ -266,7 +295,7 @@ const UnifiedAuth: React.FC = () => {
 
         {/* Floating Achievement Icons */}
         <div className="absolute inset-0 overflow-hidden">
-          {[Trophy, Medal, Crown, Target, Lightning].map((Icon, i) => (
+          {[Trophy, Medal, Crown, Target].map((Icon, i) => (
             <Icon
               key={i}
               className="absolute text-white/10 animate-bounce"
@@ -276,6 +305,21 @@ const UnifiedAuth: React.FC = () => {
                 top: `${10 + Math.random() * 80}%`,
                 animationDelay: `${i * 0.5}s`,
                 animationDuration: `${3 + Math.random() * 2}s`
+              }}
+            />
+          ))}
+          {/* Special Lightning Effects */}
+          {[...Array(3)].map((_, i) => (
+            <Lightning
+              key={`lightning-${i}`}
+              className="absolute text-yellow-400/20 animate-pulse"
+              size={32 + Math.random() * 24}
+              style={{
+                left: `${15 + Math.random() * 70}%`,
+                top: `${20 + Math.random() * 60}%`,
+                animationDelay: `${i * 0.7}s`,
+                animationDuration: `${1.5 + Math.random()}s`,
+                filter: 'drop-shadow(0 0 8px rgba(250, 204, 21, 0.3))'
               }}
             />
           ))}
@@ -324,10 +368,30 @@ const UnifiedAuth: React.FC = () => {
               <div className="text-sm italic text-yellow-300 border-l-2 border-orange-500 pl-3">
                 {backgroundImages[currentBg].quote}
               </div>
+
+              {/* Lightning-Specific Features */}
+              {backgroundImages[currentBg].icon === Lightning && (
+                <div className="mt-4 p-3 bg-gradient-to-r from-yellow-600/30 to-blue-600/30 rounded-lg border border-yellow-400/50">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lightning className="w-4 h-4 text-yellow-400 animate-pulse" />
+                    <span className="text-yellow-300 font-bold text-sm">LIGHTNING MODE ACTIVE</span>
+                  </div>
+                  <div className="text-xs text-gray-300">
+                    <div className="flex justify-between mb-1">
+                      <span>Power Output:</span>
+                      <span className="text-yellow-400 font-bold">{lightningMetrics.powerOutput[currentBg % lightningMetrics.powerOutput.length]}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Reaction Time:</span>
+                      <span className="text-green-400 font-bold">{lightningMetrics.reactionTime[currentBg % lightningMetrics.reactionTime.length]}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Rotating Motivational Quote */}
-            <div className="mb-8 p-4 bg-gradient-to-r from-orange-600/20 to-red-600/20 backdrop-blur-sm rounded-xl border border-orange-400/30">
+            <div className="mb-6 p-4 bg-gradient-to-r from-orange-600/20 to-red-600/20 backdrop-blur-sm rounded-xl border border-orange-400/30">
               <div className="flex items-center gap-2 mb-2">
                 <Flame className="w-4 h-4 text-orange-400" />
                 <span className="text-orange-300 font-bold text-sm">DAILY MOTIVATION</span>
@@ -335,6 +399,25 @@ const UnifiedAuth: React.FC = () => {
               <p className="text-white font-semibold text-lg">
                 "{motivationalQuotes[currentQuote]}"
               </p>
+            </div>
+
+            {/* Lightning Training Features */}
+            <div className="mb-8 p-4 bg-gradient-to-r from-yellow-600/20 to-blue-600/20 backdrop-blur-sm rounded-xl border border-yellow-400/30">
+              <div className="flex items-center gap-2 mb-3">
+                <Lightning className="w-5 h-5 text-yellow-400 animate-pulse" />
+                <span className="text-yellow-300 font-bold">LIGHTNING TRAINING PROTOCOLS</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {lightningTrainingModes.slice(0, 4).map((mode, index) => {
+                  const colors = ['bg-yellow-400', 'bg-blue-400', 'bg-green-400', 'bg-purple-400'];
+                  return (
+                    <div key={index} className="flex items-center gap-2 text-gray-300">
+                      <div className={`w-2 h-2 ${colors[index]} rounded-full animate-pulse`}></div>
+                      <span>{mode}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Elite Features */}
@@ -358,12 +441,16 @@ const UnifiedAuth: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-4 p-3 bg-gradient-to-r from-yellow-600/20 to-red-600/20 rounded-xl border border-yellow-500/30">
-                <div className="p-2 bg-yellow-500/30 rounded-lg">
+                <div className="p-2 bg-yellow-500/30 rounded-lg animate-pulse">
                   <Lightning className="w-6 h-6 text-yellow-300" />
                 </div>
-                <div>
-                  <span className="text-lg font-bold text-white">PERFORMANCE ANALYTICS</span>
-                  <p className="text-sm text-gray-300">Real-time optimization</p>
+                <div className="flex-1">
+                  <span className="text-lg font-bold text-white">LIGHTNING ANALYTICS</span>
+                  <p className="text-sm text-gray-300">AI-powered performance insights</p>
+                  <div className="flex gap-2 mt-1">
+                    <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Power Tracking</span>
+                    <span className="text-xs bg-red-500/20 text-red-300 px-2 py-1 rounded">Speed Analysis</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -393,8 +480,37 @@ const UnifiedAuth: React.FC = () => {
               ))}
             </div>
 
+            {/* Lightning Performance Metrics */}
+            <div className="mt-8 p-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl border border-blue-500/30">
+              <div className="flex items-center gap-3 mb-3">
+                <Lightning className="w-6 h-6 text-blue-400 animate-pulse" />
+                <div>
+                  <p className="text-blue-300 font-bold">LIGHTNING METRICS</p>
+                  <p className="text-sm text-gray-300">Real-time performance data</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-black/30 p-2 rounded">
+                  <div className="text-yellow-400 font-bold">POWER OUTPUT</div>
+                  <div className="text-white">{lightningMetrics.powerOutput[currentBg % lightningMetrics.powerOutput.length]}</div>
+                </div>
+                <div className="bg-black/30 p-2 rounded">
+                  <div className="text-green-400 font-bold">SPEED BURST</div>
+                  <div className="text-white">{lightningMetrics.speedBurst[currentBg % lightningMetrics.speedBurst.length]}</div>
+                </div>
+                <div className="bg-black/30 p-2 rounded">
+                  <div className="text-orange-400 font-bold">REACTION</div>
+                  <div className="text-white">{lightningMetrics.reactionTime[currentBg % lightningMetrics.reactionTime.length]}</div>
+                </div>
+                <div className="bg-black/30 p-2 rounded">
+                  <div className="text-purple-400 font-bold">EFFICIENCY</div>
+                  <div className="text-white">{lightningMetrics.efficiency[currentBg % lightningMetrics.efficiency.length]}</div>
+                </div>
+              </div>
+            </div>
+
             {/* Achievement Badge */}
-            <div className="mt-8 p-4 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl border border-yellow-500/30">
+            <div className="mt-6 p-4 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl border border-yellow-500/30">
               <div className="flex items-center gap-3">
                 <Trophy className="w-6 h-6 text-yellow-400" />
                 <div>
